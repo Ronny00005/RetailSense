@@ -18,6 +18,9 @@ ALLOWED_EXTENSIONS = {"csv"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+@app.route("/favicon.ico")
+def favicon():
+    return "", 204
 
 def load_user_csv(user_id):
     conn = get_db()
@@ -54,14 +57,15 @@ def process_sales_data(df):
     return df
 
 # -------------------- DATABASE --------------------
+import os
+import os
+import psycopg2
+
 def get_db():
-    return psycopg2.connect(
-        host="localhost",
-        database="sales_app",
-        user="sales_user",
-        password="sales123",
-        port=5432
-    )
+    db_url = os.environ.get("DATABASE_URL")
+    if not db_url:
+        raise RuntimeError("DATABASE_URL is NOT set")
+    return psycopg2.connect(db_url)
 
     
 
