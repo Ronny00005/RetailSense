@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Sense - Smart Sales Analytics</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+   <nav class="navbar custom-navbar">
+    <div class="container d-flex align-items-center">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span class="brand-icon">📊</span>
+            <span class="brand-text">Retail Sense</span>
+        </a>
+
+        <div class="nav-links ms-auto d-flex align-items-center">
+            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+            <a class="nav-link" href="{{ url_for('faqs') }}">FAQs</a>
+        </div>
+    </div>
+</nav>
+    <!-- Hero Section with Auth Forms -->
+    <section class="hero-section">
+        <div class="hero-background"></div>
+        <div class="container">
+            <div class="auth-container">
+                <!-- Left Side - Auth Forms -->
+                <div class="auth-forms">
+                    <div class="form-header">
+                        <h1 id="formTitle" class="form-title">Welcome Back</h1>
+                        <p class="form-subtitle">Access your retail analytics dashboard</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form">
+                        <div class="input-wrapper">
+                            <label for="loginEmail" class="input-label">Email Address</label>
+                            <input type="email" id="loginEmail" class="form-input" required>
+                        </div>
+
+                        <div class="input-wrapper">
+                            <label for="loginPassword" class="input-label">Password</label>
+                            <div class="password-input-group">
+                                <input type="password" id="loginPassword" class="form-input" required>
+                                <button type="button" class="password-toggle" onclick="togglePasswordVisibility('loginPassword', this)">
+                                    👁️
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn-primary" onclick="loginUser()">
+                            <span>Sign In</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+
+                        <p class="switch-text">
+                            Don't have an account? 
+                            <span class="link-accent" onclick="showSignup()">Create one</span>
+                        </p>
+                    </form>
+
+                    <!-- Signup Form -->
+                    <form id="signupForm" class="auth-form hidden">
+                        <div class="signup-scroll">
+                            <div class="input-wrapper">
+                                <label for="signupName" class="input-label">Full Name</label>
+                                <input type="text" id="signupName" class="form-input" required>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <label for="signupEmail" class="input-label">Email Address</label>
+                                <input type="email" id="signupEmail" class="form-input" required>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <label for="signupMobile" class="input-label">Mobile Number</label>
+                                <input type="tel" id="signupMobile" class="form-input" required>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <label for="signupPassword" class="input-label">Password</label>
+                                <div class="password-input-group">
+                                    <input type="password" id="signupPassword" class="form-input" required>
+                                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signupPassword', this)">
+                                        👁️
+                                    </button>
+                                </div>
+                                <div class="strength-meter">
+                                    <div class="strength-bar"></div>
+                                </div>
+                                <p class="strength-text">Password strength</p>
+                            </div>
+
+                            <div class="input-wrapper">
+                                <label for="signupConfirmPassword" class="input-label">Confirm Password</label>
+                                <div class="password-input-group">
+                                    <input type="password" id="signupConfirmPassword" class="form-input" required>
+                                    <button type="button" class="password-toggle" onclick="togglePasswordVisibility('signupConfirmPassword', this)">
+                                        👁️
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn-primary" onclick="signupUser()">
+                                <span>Create Account</span>
+                                <span class="btn-arrow">→</span>
+                            </button>
+                        </div>
+
+                        <p class="switch-text">
+                            Already have an account? 
+                            <span class="link-accent" onclick="showLogin()">Sign in</span>
+                        </p>
+                    </form>
+                </div>
+
+                <!-- Right Side - Feature Carousel -->
+                <div class="feature-showcase">
+                    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button>
+                        </div>
+
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="carousel-content">
+                                    <div class="feature-icon">📤</div>
+                                    <h3>Upload CSV Data</h3>
+                                    <p>Securely upload your sales data and let our system process it instantly</p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <div class="feature-icon">📈</div>
+                                    <h3>Sales Dashboard</h3>
+                                    <p>Visualize your revenue trends and product performance at a glance</p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item">
+                                <div class="carousel-content">
+                                    <div class="feature-icon">🔮</div>
+                                    <h3>Future Predictions</h3>
+                                    <p>Get logic-based predictions to plan your inventory and sales strategy</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+   
+
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        // Form Switching
+        function showSignup() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const title = document.getElementById('formTitle');
+            const subtitle = document.querySelector('.form-subtitle');
+
+            loginForm.style.animation = 'slideOut 0.4s ease forwards';
+            
+            setTimeout(() => {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                signupForm.style.animation = 'slideIn 0.4s ease forwards';
+                title.textContent = 'Create Account';
+                subtitle.textContent = 'Join us and start analyzing your sales data';
+            }, 400);
+        }
+
+        function showLogin() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const title = document.getElementById('formTitle');
+            const subtitle = document.querySelector('.form-subtitle');
+
+            signupForm.style.animation = 'slideOut 0.4s ease forwards';
+            
+            setTimeout(() => {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                loginForm.style.animation = 'slideIn 0.4s ease forwards';
+                title.textContent = 'Welcome Back';
+                subtitle.textContent = 'Access your retail analytics dashboard';
+            }, 400);
+        }
+
+        // Password Strength Meter
+        const passwordInput = document.getElementById('signupPassword');
+        const strengthBar = document.querySelector('.strength-bar');
+        const strengthText = document.querySelector('.strength-text');
+
+        if (passwordInput) {
+            passwordInput.addEventListener('input', () => {
+                const val = passwordInput.value;
+                let strength = 0;
+
+                if (val.length >= 6) strength++;
+                if (/[A-Z]/.test(val)) strength++;
+                if (/[0-9]/.test(val)) strength++;
+                if (/[^A-Za-z0-9]/.test(val)) strength++;
+
+                const strengths = [
+                    { width: '0%', color: 'transparent', text: 'Password strength' },
+                    { width: '25%', color: '#ff6a3d', text: 'Weak' },
+                    { width: '50%', color: '#f4db7d', text: 'Fair' },
+                    { width: '75%', color: '#9daaf2', text: 'Good' },
+                    { width: '100%', color: '#4ade80', text: 'Strong' }
+                ];
+
+                const current = strengths[strength] || strengths[0];
+                strengthBar.style.width = current.width;
+                strengthBar.style.background = current.color;
+                strengthText.textContent = current.text;
+            });
+        }
+
+        // Login Handler
+        async function loginUser() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const payload = { email, password };
+
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert('Invalid credentials');
+                    return;
+                }
+
+                sessionStorage.setItem('user_id', data.user_id);
+                sessionStorage.setItem('user_name', data.name);
+                if (data.csv_uploaded) {
+    window.location.href = "/dashboard";
+} else {
+    window.location.href = "/upload";
+}
+
+            } catch (error) {
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        async function signupUser() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const mobile = document.getElementById('signupMobile').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+            if (!name || !email || !mobile || !password || !confirmPassword) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            const payload = {
+                full_name: name,
+                email: email,
+                mobile: mobile,
+                password: password
+            };
+
+            try {
+                const res = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert(data.message || 'Signup failed');
+                    return;
+                }
+
+                alert('Account created successfully!');
+                showLogin();
+            } catch (error) {
+                alert('Signup failed. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>

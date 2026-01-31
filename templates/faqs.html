@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - Retail Sense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/faqs.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar custom-navbar">
+    <div class="container d-flex align-items-center">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span class="brand-icon">📊</span>
+            <span class="brand-text">Retail Sense</span>
+        </a>
+
+        <div class="nav-links ms-auto d-flex align-items-center">
+            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+            <a class="nav-link" href="{{ url_for('faqs') }}">FAQs</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="faq-hero">
+                <div class="hero-badge">Support Center</div>
+                <h1 class="page-title">Frequently Asked Questions</h1>
+                <p class="page-description">
+                    Clear answers to common questions about Retail Sense
+                </p>
+            </div>
+
+            <!-- FAQ Sections -->
+            <div class="faq-container">
+                <!-- General -->
+                <div class="faq-section">
+                    <h2 class="faq-category">
+                        <span class="category-icon">ℹ️</span>
+                        General
+                    </h2>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>What is Retail Sense?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Retail Sense is a sales and retail analytics platform that transforms 
+                                raw CSV sales data into meaningful insights, dashboards, and future trend 
+                                predictions. It helps businesses make data-driven decisions without 
+                                requiring technical expertise.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Who can use Retail Sense?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Retail store owners, sales analysts, inventory managers, business students, 
+                                and anyone who needs to analyze sales data can benefit from Retail Sense. 
+                                No technical background is required.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CSV & Data -->
+                <div class="faq-section">
+                    <h2 class="faq-category">
+                        <span class="category-icon">📄</span>
+                        CSV & Data
+                    </h2>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>What file format is supported?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                The system supports CSV (Comma Separated Values) files containing 
+                                structured sales data. Your CSV file should include columns for date, 
+                                product name, quantity, and revenue.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>What happens if my CSV file is incorrect?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                If the CSV format is incorrect or missing required columns, the system 
+                                will notify you with specific error messages. You'll be prompted to 
+                                upload a valid file with the correct structure.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Is there a file size limit?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Currently, the system can handle CSV files up to 50MB in size. This 
+                                typically accommodates several years of sales data for most retail businesses.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics & Prediction -->
+                <div class="faq-section">
+                    <h2 class="faq-category">
+                        <span class="category-icon">📊</span>
+                        Analytics & Prediction
+                    </h2>
+                    
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>What type of analytics are provided?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Retail Sense provides comprehensive analytics including sales trends over time, 
+                                revenue analysis, product performance insights, peak sales periods, and 
+                                summary dashboards with key metrics like total revenue and best-selling products.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>Is machine learning used for predictions?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                No. Predictions are logic-based and rule-driven, making them transparent, 
+                                fast, and easy to understand. This approach works well for most retail 
+                                scenarios without requiring complex ML models.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question" onclick="toggleFaq(this)">
+                            <span>How accurate are the predictions?</span>
+                            <span class="faq-arrow">+</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>
+                                Prediction accuracy depends on the quality and consistency of your historical 
+                                data. Our logic-based system analyzes patterns and trends to provide reasonable 
+                                forecasts for short to medium-term planning.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+               
+
+            <!-- Still Have Questions -->
+            <div class="contact-section">
+                <div class="contact-card">
+                    <h3>Still have questions?</h3>
+                    <p>Can't find the answer you're looking for? Feel free to reach out to our support team.</p>
+                    <button class="btn-contact" onclick="alert('Contact feature coming soon!')">
+                        Contact Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        function toggleFaq(button) {
+            const faqItem = button.parentElement;
+            const isOpen = faqItem.classList.contains('active');
+            
+            // Close all other FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('.faq-arrow').textContent = '+';
+            });
+            
+            // Toggle current FAQ
+            if (!isOpen) {
+                faqItem.classList.add('active');
+                button.querySelector('.faq-arrow').textContent = '−';
+            }
+        }
+    </script>
+</body>
+</html>

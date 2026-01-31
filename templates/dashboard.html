@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retail Sense - Analytics Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+     <!-- <link rel="stylesheet" href="dashboard.css"> -->
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    
+    <!-- Dashboard Container - 1:3 Ratio -->
+    <div class="dashboard-container">
+        
+        <!-- LEFT SIDEBAR (25%) -->
+        <aside class="sidebar">
+            
+            <!-- Logo/Header -->
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">📊</span>
+                    <span class="logo-text">Retail Sense</span>
+                </div>
+            </div>
+
+            <!-- Navigation Menu -->
+            <nav class="sidebar-nav">
+                <button class="nav-item active" onclick="showSection('overview')">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Overall View</span>
+                </button>
+                <button class="nav-item" onclick="showSection('category')">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Category Analysis</span>
+                </button>
+                <button class="nav-item" onclick="showSection('future')">
+                    <span class="nav-icon">🔮</span>
+                    <span class="nav-text">Future Analytics</span>
+                </button>
+                <button class="nav-item" onclick="showSection('datewise')">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-text">Date-wise Report</span>
+                </button>
+                <button class="nav-item" onclick="showSection('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Profile</span>
+                </button>
+                 <button class="nav-item" onclick="showSection('upload')">
+    <span class="nav-icon">⬆️</span>
+    <span class="nav-text">Upload CSV</span>
+</button>
+            </nav>
+
+            <!-- Logout Button -->
+            <div class="sidebar-footer">
+                <button class="logout-btn" onclick="logout()">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </button>
+            </div>
+
+        </aside>
+
+        <!-- RIGHT CONTENT AREA (75%) -->
+        <main class="main-content">
+            
+            <!-- Top Header -->
+            <header class="content-header">
+                <h1 class="page-title">Dashboard</h1>
+                <div class="user-info">
+                    <span class="welcome-text">Welcome, <strong>{{ user_name }}</strong></span>
+                    <div class="user-avatar">{{ user_name[0] }}</div>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="content-body">
+
+                <!-- SECTION 1: OVERALL VIEW -->
+                <section id="overview" class="content-section active">
+                    
+                    <!-- KPI Cards -->
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon blue">💰</div>
+                            <div class="kpi-info">
+                                <p class="kpi-label">Total Sales</p>
+                                <h2 class="kpi-value" id="totalSales">{{ total_sales }}</h2>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon orange">📊</div>
+                            <div class="kpi-info">
+                                <p class="kpi-label">Net Profit</p>
+                                <h2 class="kpi-value" id="netProfit">{{ net_profit }}</h2>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-icon yellow">📈</div>
+                            <div class="kpi-info">
+                                <p class="kpi-label">Avg Profit per Item</p>
+                                <h2 class="kpi-value" id="avgProfit">{{ avg_profit }}</h2>
+                            </div>
+                        </div>
+
+                        <div class="kpi-card highlight">
+                            <div class="kpi-icon gradient">🏆</div>
+                            <div class="kpi-info">
+                                <p class="kpi-label">Most Selling Item</p>
+                                <h2 class="kpi-value small" id="topItem">{{ top_item }}</h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top 5 Selling Items -->
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top 5 Selling Items</h3>
+                        </div>
+                        <div class="top-items-list">
+                            {% for item in top_5_items %}
+                            <div class="top-item">
+                                <div class="item-rank">{{ loop.index }}</div>
+                                <div class="item-details">
+                                    <p class="item-name">{{ item.name }}</p>
+                                    <p class="item-meta">{{ item.units_sold }} units sold</p>
+                                </div>
+                                <div class="item-value">{{ item.revenue }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- SECTION 2: CATEGORY ANALYSIS -->
+                <section id="category" class="content-section">
+                    
+                    <!-- Top 3 Highest Categories -->
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top 3 Highest Performing Categories</h3>
+                        </div>
+                        <div class="category-grid">
+                            {% for category in top_3_categories %}
+                            <div class="category-card success">
+                                <div class="category-icon">📈</div>
+                                <h4 class="category-name">{{ category.name }}</h4>
+                                <p class="category-value">{{ category.revenue }}</p>
+                                <span class="category-badge">{{ category.percentage }}%</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Top 3 Lowest Categories -->
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Top 3 Lowest Performing Categories</h3>
+                        </div>
+                        <div class="category-grid">
+                            {% for category in bottom_3_categories %}
+                            <div class="category-card warning">
+                                <div class="category-icon">📉</div>
+                                <h4 class="category-name">{{ category.name }}</h4>
+                                <p class="category-value">{{ category.revenue }}</p>
+                                <span class="category-badge">{{ category.percentage }}%</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Category Performance - Bar Chart</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="categoryBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Category Distribution - Pie Chart</h3>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="categoryPieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- SECTION 3: FUTURE ANALYTICS -->
+                <section id="future" class="content-section">
+                    
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Sales Prediction (Month-wise)</h3>
+                            <p class="card-subtitle">Based on historical data analysis</p>
+                        </div>
+
+                        <!-- Monthly Predictions -->
+                        <div class="prediction-grid">
+                            {% for prediction in monthly_predictions %}
+                            <div class="prediction-card">
+                                <div class="prediction-month">{{ prediction.month }}</div>
+                                <div class="prediction-value">{{ prediction.predicted_sales }}</div>
+                                <div class="prediction-trend {{ prediction.trend_class }}">
+                                    <span class="trend-icon">{{ prediction.trend_icon }}</span>
+                                    <span class="trend-text">{{ prediction.trend_percentage }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Forecast Chart -->
+                        <div class="chart-container large">
+                            <canvas id="forecastChart"></canvas>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- SECTION 4: DATE-WISE REPORT GENERATION -->
+                <section id="datewise" class="content-section">
+                    
+                    <div class="data-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Generate Date-wise Report</h3>
+                            <p class="card-subtitle">Select date range to view detailed analytics</p>
+                        </div>
+
+                        <!-- Date Selection Form -->
+                        <form id="dateForm" class="date-form" onsubmit="generateReport(event)">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="dateFrom">From Date</label>
+                                    <input type="date" id="dateFrom" name="date_from" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateTo">To Date</label>
+                                    <input type="date" id="dateTo" name="date_to" required>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn-generate">
+                                        <span class="btn-icon">📊</span>
+                                        Generate Report
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <!-- Report Results (Hidden initially) -->
+                        <div id="reportResults" class="report-results hidden">
+                            
+                            <!-- KPI Cards for Report -->
+                            <div class="kpi-grid">
+                                <div class="kpi-card">
+                                    <div class="kpi-icon blue">💵</div>
+                                    <div class="kpi-info">
+                                        <p class="kpi-label">Sales</p>
+                                        <h2 class="kpi-value" id="reportSales">-</h2>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-card">
+                                    <div class="kpi-icon orange">📊</div>
+                                    <div class="kpi-info">
+                                        <p class="kpi-label">Profit</p>
+                                        <h2 class="kpi-value" id="reportProfit">-</h2>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-card">
+                                    <div class="kpi-icon gradient">🏆</div>
+                                    <div class="kpi-info">
+                                        <p class="kpi-label">Top Product</p>
+                                        <h2 class="kpi-value small" id="reportTopProduct">-</h2>
+                                    </div>
+                                </div>
+
+                                <div class="kpi-card">
+                                    <div class="kpi-icon yellow">⚠️</div>
+                                    <div class="kpi-info">
+                                        <p class="kpi-label">Worst Product</p>
+                                        <h2 class="kpi-value small" id="reportWorstProduct">-</h2>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download Options -->
+                            <div class="download-actions">
+                                
+                                <button class="btn-download" onclick="downloadExcel()">
+                                    <span class="btn-icon">📊</span>
+                                    Download Excel
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+               
+<!-- SECTION: UPLOAD CSV -->
+<section id="upload" class="content-section">
+
+    <div class="data-card">
+        <div class="card-header">
+            <h3 class="card-title">Upload Sales CSV</h3>
+            <p class="card-subtitle">
+                Upload a new CSV file to refresh dashboard analytics
+            </p>
+        </div>
+
+        <form
+    method="POST"
+    enctype="multipart/form-data"
+    onsubmit="uploadCSV(event)"
+>
+    <input type="file" name="file" accept=".csv" required>
+
+    <button type="submit" class="btn-primary">
+        Upload & Process
+    </button>
+</form>
+
+    </div>
+
+</section>
+
+                <!-- SECTION 5: PROFILE -->
+                <section id="profile" class="content-section">
+                    
+                    <div class="profile-grid">
+                        
+                        <!-- Profile Info -->
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Profile Information</h3>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-avatar-large">{{ user_name[0] }}</div>
+                                <div class="profile-details">
+                                    <h3 class="profile-name">{{ user_name }}</h3>
+                                    <p class="profile-email">{{ user_email }}</p>
+                                    <p class="profile-role">{{ user_role }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Change Password -->
+                        <div class="data-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Change Password</h3>
+                            </div>
+                            <form id="passwordForm" class="password-form" onsubmit="changePassword(event)">
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <input type="password" id="currentPassword" name="current_password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <input type="password" id="newPassword" name="new_password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" name="confirm_password" required>
+                                </div>
+                                <button type="submit" class="btn-primary">
+                                    <span class="btn-icon">🔒</span>
+                                    Update Password
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

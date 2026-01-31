@@ -1,0 +1,383 @@
+/* ============================================
+   RETAIL SENSE - SHARED STYLES
+   Color Palette: #1a2238, #9daaf2, #ff6a3d, #f4db7d
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+    /* Color Palette */
+    --color-primary: #1a2238;
+    --color-secondary: #9daaf2;
+    --color-accent: #ff6a3d;
+    --color-highlight: #f4db7d;
+    
+    /* Extended Palette */
+    --color-primary-light: #252d48;
+    --color-primary-dark: #0f1421;
+    --color-secondary-light: #b8c2f7;
+    --color-secondary-dark: #7b8ae8;
+    --color-accent-light: #ff8c66;
+    --color-accent-dark: #e54f23;
+    --color-highlight-light: #f7e8a3;
+    --color-highlight-dark: #e8ca5d;
+    
+    /* Neutrals */
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gray-100: #f8f9fa;
+    --color-gray-200: #e9ecef;
+    --color-gray-300: #dee2e6;
+    --color-gray-400: #ced4da;
+    --color-gray-500: #adb5bd;
+    --color-gray-600: #6c757d;
+    --color-gray-700: #495057;
+    --color-gray-800: #343a40;
+    --color-gray-900: #212529;
+    
+    /* Typography */
+    --font-primary: 'Outfit', sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(26, 34, 56, 0.08);
+    --shadow-md: 0 4px 12px rgba(26, 34, 56, 0.12);
+    --shadow-lg: 0 8px 24px rgba(26, 34, 56, 0.16);
+    --shadow-xl: 0 16px 48px rgba(26, 34, 56, 0.2);
+    
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+}
+
+/* Light Mode Overrides */
+body.light-mode {
+    --color-primary: #f8f9fa;
+    --color-primary-light: #ffffff;
+    --color-primary-dark: #e9ecef;
+    --color-text: #1a2238;
+    --color-text-secondary: #495057;
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f8f9fa;
+}
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--color-primary);
+    color: var(--color-white);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color var(--transition-base);
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-sm);
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+h3 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h4 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); }
+h5 { font-size: clamp(1.125rem, 2vw, 1.25rem); }
+h6 { font-size: clamp(1rem, 1.5vw, 1.125rem); }
+
+p {
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-gray-300);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-base);
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+.custom-navbar {
+    background: rgba(26, 34, 56, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1.25rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(157, 170, 242, 0.1);
+    transition: all var(--transition-base);
+}
+
+body.light-mode .custom-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(26, 34, 56, 0.1);
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-white);
+    transition: all var(--transition-base);
+}
+
+body.light-mode .navbar-brand {
+    color: var(--color-primary-dark);
+}
+
+.brand-icon {
+    font-size: 1.75rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.brand-text {
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-mode .brand-text {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.nav-links {
+    gap: 2rem;
+}
+
+.nav-link {
+    position: relative;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--color-gray-300);
+    transition: all var(--transition-base);
+    padding: 0.5rem 0;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+    transition: width var(--transition-base);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--color-white);
+}
+
+body.light-mode .nav-link:hover,
+body.light-mode .nav-link.active {
+    color: var(--color-primary-dark);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.theme-toggle {
+    background: var(--color-primary-light);
+    border: 1px solid rgba(157, 170, 242, 0.2);
+    color: var(--color-white);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+body.light-mode .theme-toggle {
+    background: var(--color-gray-100);
+    border-color: var(--color-gray-300);
+}
+
+.theme-toggle:hover {
+    transform: rotate(180deg) scale(1.1);
+    background: var(--color-secondary);
+    border-color: var(--color-secondary);
+}
+
+body.light-mode .theme-toggle:hover {
+    background: var(--color-secondary-light);
+    border-color: var(--color-secondary-light);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.hidden {
+    display: none !important;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(0.98);
+    }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    .nav-links {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+    
+    .brand-text {
+        display: none;
+    }
+    
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-navbar {
+        padding: 1rem 0;
+    }
+    
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+    
+    .brand-icon {
+        font-size: 1.5rem;
+    }
+}
+/* =====================================
+   FINAL LIGHT MODE TEXT FIX (SAFE)
+   ===================================== */
+
+/* Gradient text fix */
+body.light-mode .page-title,
+body.light-mode .form-title,
+body.light-mode .section-title {
+    background: none !important;
+    -webkit-text-fill-color: #111827 !important;
+    color: #111827 !important;
+}
+
+/* Headings */
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode h5,
+body.light-mode h6 {
+    color: #111827;
+}
+
+/* Normal text */
+body.light-mode p,
+body.light-mode span,
+body.light-mode li,
+body.light-mode label,
+body.light-mode small {
+    color: #374151;
+}
+

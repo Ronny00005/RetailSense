@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Retail Sense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar custom-navbar">
+    <div class="container d-flex align-items-center">
+        <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span class="brand-icon">📊</span>
+            <span class="brand-text">Retail Sense</span>
+        </a>
+
+        <div class="nav-links ms-auto d-flex align-items-center">
+            <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('about') }}">About</a>
+            <a class="nav-link" href="{{ url_for('faqs') }}">FAQs</a>
+        </div>
+    </div>
+</nav>
+
+    <!-- Page Content -->
+    <div class="page-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="about-hero">
+                <div class="hero-badge">About Us</div>
+                <h1 class="page-title">Transform Data Into Insights</h1>
+                <p class="page-description">
+                    Retail Sense is a smart sales and retail analytics platform designed to transform 
+                    raw CSV sales data into meaningful insights that help businesses make better decisions.
+                </p>
+            </div>
+
+            <!-- Problem & Solution -->
+            <div class="problem-solution-section">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="info-card problem-card">
+                            <div class="card-icon">❌</div>
+                            <h3 class="card-title">The Problem</h3>
+                            <p class="card-text">
+                                Retailers often store sales data in CSV files, making it difficult to 
+                                analyze trends, performance, and future growth. Manual analysis is time-consuming 
+                                and prone to errors.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-card solution-card">
+                            <div class="card-icon">✅</div>
+                            <h3 class="card-title">Our Solution</h3>
+                            <p class="card-text">
+                                Retail Sense allows users to upload CSV data and instantly view analytics 
+                                dashboards and predictions in a simple, intuitive UI. No more spreadsheet headaches.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-section">
+                <h2 class="section-title">Key Features</h2>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">📤</div>
+                            <h3 class="feature-title">CSV Upload</h3>
+                            <p class="feature-description">
+                                Upload and validate sales data securely with instant feedback
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <h3 class="feature-title">Sales Dashboard</h3>
+                            <p class="feature-description">
+                                Visualize revenue, trends, and product performance at a glance
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔮</div>
+                            <h3 class="feature-title">Future Prediction</h3>
+                            <p class="feature-description">
+                                Logic-based future sales prediction without complex machine learning
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔐</div>
+                            <h3 class="feature-title">User Authentication</h3>
+                            <p class="feature-description">
+                                Secure login and signup system to protect your business data
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="how-it-works-section">
+                <h2 class="section-title">How It Works</h2>
+                <div class="workflow">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Upload Your CSV</h4>
+                            <p>Simply drag and drop or select your sales data file</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Data Processing</h4>
+                            <p>Our system validates and processes your data instantly</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>View Insights</h4>
+                            <p>Access dashboards with actionable insights and trends</p>
+                        </div>
+                    </div>
+                    <div class="workflow-arrow">→</div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Future Predictions</h4>
+                            <p>Get forecasts to guide your business decisions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+    </script>
+</body>
+</html>

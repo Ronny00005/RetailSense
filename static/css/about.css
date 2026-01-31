@@ -1,0 +1,304 @@
+/* ============================================
+   ABOUT PAGE STYLES
+   ============================================ */
+
+.page-content {
+    min-height: calc(100vh - 80px);
+    padding: var(--spacing-xl) 0;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+
+.about-hero {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeIn 0.6s ease;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    color: var(--color-white);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 50px;
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 4px 12px rgba(157, 170, 242, 0.3);
+}
+
+.page-title {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    margin-bottom: var(--spacing-md);
+    background: linear-gradient(135deg, var(--color-white), var(--color-secondary-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-mode .page-title {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-secondary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.page-description {
+    font-size: 1.25rem;
+    color: var(--color-gray-300);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+body.light-mode .page-description {
+    color: var(--color-gray-700);
+}
+
+/* ============================================
+   PROBLEM & SOLUTION SECTION
+   ============================================ */
+
+.problem-solution-section {
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeIn 0.6s ease 0.2s backwards;
+}
+
+.info-card {
+    background: var(--color-primary-light);
+    border-radius: 20px;
+    padding: var(--spacing-xl);
+    border: 2px solid rgba(157, 170, 242, 0.1);
+    transition: all var(--transition-base);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+body.light-mode .info-card {
+    background: var(--color-white);
+    border-color: var(--color-gray-300);
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+}
+
+.info-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: rgba(157, 170, 242, 0.3);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.card-title {
+    font-size: 1.75rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-white);
+}
+
+body.light-mode .card-title {
+    color: var(--color-primary-dark);
+}
+
+.card-text {
+    color: var(--color-gray-300);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+body.light-mode .card-text {
+    color: var(--color-gray-600);
+}
+
+.problem-card .card-icon {
+    color: var(--color-accent);
+}
+
+.solution-card .card-icon {
+    color: var(--color-highlight);
+}
+
+/* ============================================
+   FEATURES SECTION
+   ============================================ */
+
+.features-section {
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeIn 0.6s ease 0.4s backwards;
+}
+
+.section-title {
+    text-align: center;
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    margin-bottom: var(--spacing-xl);
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+body.light-mode .section-title {
+    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.feature-card {
+    background: var(--color-primary-light);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    border: 1px solid rgba(157, 170, 242, 0.1);
+    transition: all var(--transition-base);
+    text-align: center;
+    height: 100%;
+}
+
+body.light-mode .feature-card {
+    background: var(--color-white);
+    border-color: var(--color-gray-300);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-secondary);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-white);
+}
+
+body.light-mode .feature-title {
+    color: var(--color-primary-dark);
+}
+
+.feature-description {
+    color: var(--color-gray-400);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+body.light-mode .feature-description {
+    color: var(--color-gray-600);
+}
+
+/* ============================================
+   HOW IT WORKS SECTION
+   ============================================ */
+
+.how-it-works-section {
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeIn 0.6s ease 0.6s backwards;
+}
+
+.workflow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.workflow-step {
+    background: var(--color-primary-light);
+    border-radius: 16px;
+    padding: var(--spacing-lg);
+    border: 2px solid rgba(157, 170, 242, 0.2);
+    text-align: center;
+    flex: 1;
+    min-width: 200px;
+    max-width: 250px;
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+body.light-mode .workflow-step {
+    background: var(--color-white);
+    border-color: var(--color-gray-300);
+}
+
+.workflow-step:hover {
+    transform: scale(1.05);
+    border-color: var(--color-secondary);
+    box-shadow: var(--shadow-md);
+}
+
+.step-number {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    color: var(--color-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 700;
+    font-family: var(--font-display);
+    margin: 0 auto var(--spacing-md);
+    box-shadow: 0 4px 12px rgba(157, 170, 242, 0.3);
+}
+
+.step-content h4 {
+    color: var(--color-white);
+    font-size: 1.125rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+body.light-mode .step-content h4 {
+    color: var(--color-primary-dark);
+}
+
+.step-content p {
+    color: var(--color-gray-400);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+body.light-mode .step-content p {
+    color: var(--color-gray-600);
+}
+
+.workflow-arrow {
+    font-size: 2rem;
+    color: var(--color-secondary);
+    font-weight: 700;
+}
+
+body.light-mode .workflow-arrow {
+    color: var(--color-secondary-dark);
+}
+/* About page card text fix */
+body.light-mode .card-title,
+body.light-mode .feature-title,
+body.light-mode .step-content h4 {
+    color: #111827;
+}

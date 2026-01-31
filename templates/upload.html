@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Data - Retail Sense</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar custom-navbar">
+        <div class="container d-flex align-items-center">
+            <a class="navbar-brand" href="index.html">
+                <span class="brand-icon">📊</span>
+                <span class="brand-text">Retail Sense</span>
+            </a>
+            <div class="nav-links ms-auto d-flex align-items-center">
+                <span class="user-welcome" id="userWelcome">Welcome, User!</span>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <a href="{{ url_for('logout') }}" class="btn-logout">
+    <span>Logout</span>
+</a>
+
+    <span>Logout</span>
+</a>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="page-content">
+        <div class="container">
+            <!-- Back Button -->
+            <div class="back-navigation">
+                <button class="btn-back" onclick="goBack()">
+                    <span class="back-arrow">←</span>
+                    <span>Back to Home</span>
+                </button>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-container">
+                <!-- Header -->
+                <div class="upload-header">
+                    <div class="header-badge">Step 1</div>
+                    <h1 class="upload-title">Upload Your Sales Data</h1>
+                    <p class="upload-subtitle">
+                        Upload your CSV file containing sales data to get started with analytics
+                    </p>
+                </div>
+
+                <!-- Upload Area -->
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📤</div>
+                        <h3 class="upload-heading">Drop your CSV file here</h3>
+                        <p class="upload-text">or click to browse</p>
+                        <input type="file" id="fileInput" accept=".csv" hidden>
+                        <button class="btn-browse" onclick="document.getElementById('fileInput').click()">
+                            Browse Files
+                        </button>
+                        <p class="upload-hint">Maximum file size: 50MB • Supported format: CSV</p>
+                    </div>
+
+                    <!-- File Preview (Hidden by default) -->
+                    <div class="file-preview hidden" id="filePreview">
+                        <div class="file-info">
+                            <div class="file-icon">📄</div>
+                            <div class="file-details">
+                                <h4 class="file-name" id="fileName">sales_data.csv</h4>
+                                <p class="file-size" id="fileSize">2.5 MB</p>
+                            </div>
+                            <button class="btn-remove" onclick="removeFile()">
+                                <span>✕</span>
+                            </button>
+                        </div>
+                        <div class="upload-progress hidden" id="uploadProgress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <p class="progress-text" id="progressText">Uploading... 0%</p>
+                        </div>
+                        <button class="btn-upload" id="btnUpload" onclick="uploadFile()">
+                            <span>Analyze Data</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CSV Format Guide -->
+                <div class="format-guide">
+                    <div class="guide-header">
+                        <div class="guide-icon">ℹ️</div>
+                        <h3>CSV Format Requirements</h3>
+                    </div>
+                    <div class="guide-content">
+                        <p class="guide-intro">Your CSV file should contain the following columns:</p>
+                        <div class="format-table">
+                            <div class="format-row format-header-row">
+                                <div class="format-cell">Column Name</div>
+                                <div class="format-cell">Description</div>
+                                <div class="format-cell">Example</div>
+                            </div>
+                            <div class="format-row">
+                                <div class="format-cell"><strong>Date</strong></div>
+                                <div class="format-cell">Transaction date</div>
+                                <div class="format-cell">2024-01-15</div>
+                            </div>
+                            <div class="format-row">
+                                <div class="format-cell"><strong>Product</strong></div>
+                                <div class="format-cell">Product name</div>
+                                <div class="format-cell">Laptop</div>
+                            </div>
+                            <div class="format-row">
+                                <div class="format-cell"><strong>Quantity</strong></div>
+                                <div class="format-cell">Units sold</div>
+                                <div class="format-cell">5</div>
+                            </div>
+                            <div class="format-row">
+                                <div class="format-cell"><strong>Revenue</strong></div>
+                                <div class="format-cell">Total sales amount</div>
+                                <div class="format-cell">2500.00</div>
+                            </div>
+                        </div>
+                        <div class="guide-example">
+                            <h4>Example CSV Structure:</h4>
+                            <pre class="code-block">Date,Product,Quantity,Revenue
+2024-01-15,Laptop,5,2500.00
+2024-01-16,Mouse,20,400.00
+2024-01-17,Keyboard,15,750.00</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Features Preview -->
+                <div class="features-preview">
+                    <h3 class="features-title">What You'll Get</h3>
+                    <div class="features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon-small">📊</div>
+                            <h4>Sales Dashboard</h4>
+                            <p>Interactive charts and graphs</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon-small">📈</div>
+                            <h4>Trend Analysis</h4>
+                            <p>Historical sales patterns</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon-small">🔮</div>
+                            <h4>Future Insights</h4>
+                            <p>Predictive analytics</p>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon-small">💰</div>
+                            <h4>Revenue Reports</h4>
+                            <p>Detailed financial metrics</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Load user name from session
+        window.addEventListener('DOMContentLoaded', () => {
+            const userName = sessionStorage.getItem('user_name');
+            if (userName) {
+                document.getElementById('userWelcome').textContent = `Welcome, ${userName}!`;
+            }
+        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.theme-icon');
+            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        }
+
+        // Back Navigation
+        function goBack() {
+            window.history.back();
+        }
+
+        // Logout
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        // Drag and Drop Functionality
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const uploadContent = document.querySelector('.upload-content');
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        // Highlight drop area
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('drag-over');
+        }
+
+        function unhighlight(e) {
+            uploadArea.classList.remove('drag-over');
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        // Handle file input change
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Process selected files
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                
+                // Validate file type
+                if (!file.name.endsWith('.csv')) {
+                    alert('Please upload a CSV file');
+                    return;
+                }
+
+                // Validate file size (50MB)
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File size must be less than 50MB');
+                    return;
+                }
+
+                // Display file preview
+                displayFilePreview(file);
+            }
+        }
+
+        function displayFilePreview(file) {
+            const fileName = file.name;
+            const fileSize = formatFileSize(file.size);
+
+            document.getElementById('fileName').textContent = fileName;
+            document.getElementById('fileSize').textContent = fileSize;
+
+            uploadContent.classList.add('hidden');
+            filePreview.classList.remove('hidden');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function removeFile() {
+            fileInput.value = '';
+            uploadContent.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+            uploadArea.classList.remove('drag-over');
+        }
+
+        // Upload File
+        async function uploadFile() {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const btnUpload = document.getElementById('btnUpload');
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            btnUpload.classList.add('hidden');
+            uploadProgress.classList.remove('hidden');
+
+            try {
+                // Simulate upload progress
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    if (progress <= 90) {
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = `Uploading... ${progress}%`;
+                    }
+                }, 200);
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                clearInterval(progressInterval);
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Upload complete!';
+
+                const data = await response.json();
+
+                if (data.success) {
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    alert(data.message || 'Upload failed. Please check your CSV format.');
+                    btnUpload.classList.remove('hidden');
+                    uploadProgress.classList.add('hidden');
+                }
+            } catch (error) {
+                alert('Upload failed. Please try again.');
+                btnUpload.classList.remove('hidden');
+                uploadProgress.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
