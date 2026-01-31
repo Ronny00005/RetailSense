@@ -330,14 +330,14 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1000);
-                } else {
-                    alert(data.message || 'Upload failed. Please check your CSV format.');
-                    btnUpload.classList.remove('hidden');
-                    uploadProgress.classList.add('hidden');
-                }
+    setTimeout(() => {
+        window.location.href = data.redirect; // ✅ correct
+    }, 1000);
+} else {
+    alert(data.message || 'Upload failed. Please check your CSV format.');
+    btnUpload.classList.remove('hidden');
+    uploadProgress.classList.add('hidden');
+}
             } catch (error) {
                 alert('Upload failed. Please try again.');
                 btnUpload.classList.remove('hidden');
