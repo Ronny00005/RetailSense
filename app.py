@@ -409,6 +409,25 @@ def datewise_report():
         "top_product": str(top_product),
         "worst_product": str(worst_product)
     })
+@app.route("/api/category-charts")
+def category_charts():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    category_sales = (
+        df.groupby("category")["sales"]
+        .sum()
+        .sort_values(ascending=False)
+    )
+
+    return jsonify({
+        "success": True,
+        "labels": list(category_sales.index),
+        "values": [float(v) for v in category_sales.values]
+    })
 
 @app.route("/download/excel", methods=["POST"])
 def download_excel():
