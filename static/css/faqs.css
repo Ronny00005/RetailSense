@@ -33,13 +33,13 @@
     font-size: 1.75rem;
     margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid rgba(157, 170, 242, 0.2);
-    color: var(--color-white);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+    color: #0F172A;
 }
 
 body.light-mode .faq-category {
-    color: var(--color-primary-dark);
-    border-bottom-color: var(--color-gray-300);
+    color: #0F172A;
+    border-bottom-color: #E0F2FE;
 }
 
 .category-icon {
@@ -51,31 +51,31 @@ body.light-mode .faq-category {
    ============================================ */
 
 .faq-item {
-    background: var(--color-primary-light);
+    background: #FFFFFF;
     border-radius: 16px;
     margin-bottom: var(--spacing-md);
-    border: 2px solid rgba(157, 170, 242, 0.1);
+    border: 2px solid #E0F2FE;
     overflow: hidden;
     transition: all var(--transition-base);
 }
 
 body.light-mode .faq-item {
-    background: var(--color-white);
-    border-color: var(--color-gray-300);
+    background: #FFFFFF;
+    border-color: #E0F2FE;
 }
 
 .faq-item:hover {
-    border-color: var(--color-secondary);
+    border-color: #3B82F6;
     box-shadow: var(--shadow-md);
 }
 
 .faq-item.active {
-    border-color: var(--color-accent);
+    border-color: #BAE6FD;
     box-shadow: var(--shadow-lg);
 }
 
 body.light-mode .faq-item.active {
-    border-color: var(--color-accent-dark);
+    border-color: #7DD3FC;
 }
 
 .faq-question {
@@ -86,7 +86,7 @@ body.light-mode .faq-item.active {
     padding: var(--spacing-md) var(--spacing-lg);
     background: transparent;
     border: none;
-    color: var(--color-white);
+    color: #0F172A;
     font-size: 1.125rem;
     font-weight: 600;
     font-family: var(--font-display);
@@ -96,21 +96,21 @@ body.light-mode .faq-item.active {
 }
 
 body.light-mode .faq-question {
-    color: var(--color-primary-dark);
+    color: #0F172A;
 }
 
 .faq-question:hover {
-    color: var(--color-secondary);
+    color: #3B82F6;
 }
 
 body.light-mode .faq-question:hover {
-    color: var(--color-secondary-dark);
+    color: #2563EB;
 }
 
 .faq-arrow {
     font-size: 1.75rem;
     font-weight: 400;
-    color: var(--color-secondary);
+    color: #3B82F6;
     transition: all var(--transition-base);
     line-height: 1;
     flex-shrink: 0;
@@ -119,7 +119,7 @@ body.light-mode .faq-question:hover {
 
 .faq-item.active .faq-arrow {
     transform: rotate(45deg);
-    color: var(--color-accent);
+    color: #BAE6FD;
 }
 
 .faq-answer {
@@ -135,14 +135,14 @@ body.light-mode .faq-question:hover {
 }
 
 .faq-answer p {
-    color: var(--color-gray-300);
+    color: #475569;
     font-size: 1rem;
     line-height: 1.7;
     margin-bottom: 0;
 }
 
 body.light-mode .faq-answer p {
-    color: var(--color-gray-600);
+    color: #475569;
 }
 
 /* ============================================
@@ -157,7 +157,7 @@ body.light-mode .faq-answer p {
 }
 
 .contact-card {
-    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     border-radius: 24px;
     padding: var(--spacing-xl);
     text-align: center;
@@ -169,7 +169,7 @@ body.light-mode .faq-answer p {
 }
 
 body.light-mode .contact-card {
-    background: linear-gradient(135deg, var(--color-secondary-light), var(--color-accent-light));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
 }
 
 .contact-card::before {
@@ -184,7 +184,7 @@ body.light-mode .contact-card {
 }
 
 .contact-card h3 {
-    color: var(--color-white);
+    color: #FFFFFF;
     font-size: 2rem;
     margin-bottom: var(--spacing-sm);
     position: relative;
@@ -200,8 +200,8 @@ body.light-mode .contact-card {
 }
 
 .btn-contact {
-    background: var(--color-white);
-    color: var(--color-accent);
+    background: #FFFFFF;
+    color: #1E3A8A;
     border: none;
     padding: 1rem 2.5rem;
     font-size: 1rem;
@@ -340,5 +340,5 @@ body.light-mode .contact-card {
 /* FAQ contact card fix */
 body.light-mode .contact-card h3,
 body.light-mode .contact-card p {
-    color: #111827;
+    color: #FFFFFF;
 }
