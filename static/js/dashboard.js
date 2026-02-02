@@ -53,16 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
 //     document.querySelector('.page-title').textContent = titles[sectionId] || 'Dashboard';
 // }
 function showSection(sectionId) {
+    // Hide all sections
     document.querySelectorAll(".content-section").forEach(sec => {
         sec.classList.remove("active");
     });
 
+    // Show selected section
     document.getElementById(sectionId).classList.add("active");
 
+    // Remove active state from all nav buttons
+    document.querySelectorAll(".nav-item").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    // Add active class to clicked nav button
+    document
+        .querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`)
+        .classList.add("active");
+
+    // Load charts only when needed
     if (sectionId === "category") {
         loadCategoryCharts();
     }
 }
+
 function uploadCSV(event) {
     event.preventDefault();
 
@@ -579,7 +593,39 @@ function renderCategoryPieChart(labels, values) {
         }
     });
 }
+fetch("/api/monthly-sales")
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) return;
 
+        const ctx = document.getElementById("monthlySalesChart");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "Monthly Sales",
+                    data: data.values,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(err => console.error("Monthly chart error:", err));
 // ============================================
 // RESPONSIVE BEHAVIOR
 // ============================================

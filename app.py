@@ -428,6 +428,25 @@ def category_charts():
         "labels": list(category_sales.index),
         "values": [float(v) for v in category_sales.values]
     })
+@app.route("/api/monthly-sales")
+def monthly_sales():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    monthly = (
+        df.set_index("date")
+        .resample("M")["sales"]
+        .sum()
+    )
+
+    return jsonify({
+        "success": True,
+        "labels": [d.strftime("%b") for d in monthly.index],
+        "values": [float(v) for v in monthly.values]
+    })
 
 @app.route("/download/excel", methods=["POST"])
 def download_excel():
