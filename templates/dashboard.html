@@ -214,18 +214,11 @@
                         </div>
 
                         <!-- Monthly Predictions -->
-                        <div class="prediction-grid">
-                            {% for prediction in monthly_predictions %}
-                            <div class="prediction-card">
-                                <div class="prediction-month">{{ prediction.month }}</div>
-                                <div class="prediction-value">{{ prediction.predicted_sales }}</div>
-                                <div class="prediction-trend {{ prediction.trend_class }}">
-                                    <span class="trend-icon">{{ prediction.trend_icon }}</span>
-                                    <span class="trend-text">{{ prediction.trend_percentage }}</span>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
+                        <!-- AI Future KPI Cards -->
+<div class="kpi-grid" id="aiFutureKpis">
+   
+</div>
+
 
                         <!-- Forecast Chart -->
                         <div class="chart-container large">

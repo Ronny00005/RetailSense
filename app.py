@@ -3,6 +3,9 @@ from psycopg2.extras  import RealDictCursor
 import io
 from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+import json
 
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,6 +13,7 @@ from werkzeug.utils import secure_filename
 
 import pandas as pd
 app = Flask(__name__, static_folder="static")  
+
 
 app.secret_key = "super_secret_key"
 
@@ -307,32 +311,7 @@ def dashboard():
     ]
 
     # ---------------- FUTURE ANALYTICS (NO ML) ----------------
-    monthly_sales = (
-    df.set_index("date")
-    .resample("ME")["sales"]
-    .sum()
-)
-
-    growth_rate = monthly_sales.pct_change().mean()
-    last_value = monthly_sales.iloc[-1]
-
-    monthly_predictions = []
-    current = last_value
-
-    for i in range(3):
-        current = current * (1 + growth_rate)
-
-        future_month = (
-            monthly_sales.index[-1] + pd.DateOffset(months=i+1)
-        ).strftime("%b %Y")
-
-        monthly_predictions.append({
-            "month": future_month,
-            "predicted_sales": round(current, 2),
-            "trend_class": "up" if growth_rate >= 0 else "down",
-            "trend_icon": "⬆️" if growth_rate >= 0 else "⬇️",
-            "trend_percentage": f"{round(growth_rate * 100, 2)}%"
-        })
+    
 
     # ---------------- USER INFO ----------------
     conn = get_db()
@@ -358,7 +337,7 @@ def dashboard():
         top_5_items=top_5_items,
         top_3_categories=top_3_categories,
         bottom_3_categories=bottom_3_categories,
-        monthly_predictions=monthly_predictions
+    
     )
 @app.route("/api/datewise-report", methods=["POST"])
 def datewise_report():
@@ -438,7 +417,7 @@ def monthly_sales():
 
     monthly = (
         df.set_index("date")
-        .resample("M")["sales"]
+        .resample("ME")["sales"]
         .sum()
     )
 
@@ -483,7 +462,48 @@ def download_excel():
 def handle_exception(e):
     print("UNHANDLED ERROR:", e)
     return jsonify({"error": str(e)}), 500
+@app.route("/api/future-forecast")
+def future_forecast():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
 
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    # Monthly sales
+    monthly_sales = (
+        df.set_index("date")
+        .resample("ME")["sales"]
+        .sum()
+    )
+
+    # 🔮 Forecast model (you DON'T need to understand internals)
+    model = SARIMAX(
+        monthly_sales,
+        order=(1, 1, 1),
+        seasonal_order=(1, 1, 1, 12)
+    )
+
+    results = model.fit(disp=False)
+
+    forecast = results.get_forecast(steps=12)
+    forecast_values = forecast.predicted_mean
+
+    future_months = [
+        (monthly_sales.index[-1] + pd.DateOffset(months=i+1)).strftime("%b")
+        for i in range(12)
+    ]
+
+    return jsonify({
+        "success": True,
+        "kpis": [
+            {
+                "month": future_months[i],
+                "value": round(float(forecast_values.iloc[i]), 2)
+            }
+            for i in range(12)
+        ]
+    })
 
 
 if __name__ == "__main__":

@@ -387,3 +387,6 @@ input {
     height: 320px;
     width: 100%;
 }
+#aiFutureKpis .kpi-card {
+    background: #232b4a;
+}

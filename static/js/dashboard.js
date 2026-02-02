@@ -18,40 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// ============================================
-// NAVIGATION
-// ============================================
-
-// function showSection(sectionId) {
-//     // Hide all sections
-//     document.querySelectorAll('.content-section').forEach(section => {
-//         section.classList.remove('active');
-//     });
-    
-//     // Show selected section
-//     const targetSection = document.getElementById(sectionId);
-//     if (targetSection) {
-//         targetSection.classList.add('active');
-//     }
-    
-//     // Update active nav item
-//     document.querySelectorAll('.nav-item').forEach(item => {
-//         item.classList.remove('active');
-//     });
-    
-//     event.target.closest('.nav-item')?.classList.add('active');
-    
-//     // Update page title
-//     const titles = {
-//         'overview': 'Overall View',
-//         'category': 'Category Analysis',
-//         'future': 'Future Analytics',
-//         'datewise': 'Date-wise Report',
-//         'profile': 'Profile'
-//     };
-    
-//     document.querySelector('.page-title').textContent = titles[sectionId] || 'Dashboard';
-// }
 function showSection(sectionId) {
     // Hide all sections
     document.querySelectorAll(".content-section").forEach(sec => {
@@ -75,6 +41,10 @@ function showSection(sectionId) {
     if (sectionId === "category") {
         loadCategoryCharts();
     }
+    if (sectionId === "future") {
+    loadAIFutureKPIs();
+}
+
 }
 
 function uploadCSV(event) {
@@ -671,3 +641,33 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => chart.resize(), 100);
         });
 });
+function loadAIFutureKPIs() {
+    fetch("/api/ai-future-forecast")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
+
+            const container = document.getElementById("aiFutureKpis");
+            container.innerHTML = "";
+
+            const colors = ["blue", "orange", "yellow", "gradient"];
+
+            data.kpis.forEach((item, index) => {
+                const color = colors[index % colors.length];
+
+                const card = document.createElement("div");
+                card.className = "kpi-card";
+
+                card.innerHTML = `
+                    <div class="kpi-icon ${color}">📅</div>
+                    <div class="kpi-info">
+                        <p class="kpi-label">${item.month} (AI Forecast)</p>
+                        <h2 class="kpi-value">₹ ${item.value.toLocaleString()}</h2>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        })
+        .catch(err => console.error("AI KPI Error:", err));
+}
