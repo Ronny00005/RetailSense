@@ -637,3 +637,37 @@ window.addEventListener('resize', () => {
 });
 
 console.log('✅ Retail Sense Dashboard Initialized');
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/monthly-sales")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
+
+            const ctx = document.getElementById("monthlySalesChart");
+
+            const chart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: "Monthly Sales",
+                        data: data.values,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // 🔥 force redraw
+            setTimeout(() => chart.resize(), 100);
+        });
+});

@@ -382,3 +382,8 @@ input {
     flex-direction: column;
     gap: 15px;
 }
+.chart-container {
+    position: relative;
+    height: 320px;
+    width: 100%;
+}
