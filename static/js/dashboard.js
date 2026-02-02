@@ -40,11 +40,12 @@ function showSection(sectionId) {
     // Load charts only when needed
     if (sectionId === "category") {
         loadCategoryCharts();
-    }
-    if (sectionId === "future") {
-    loadAIFutureKPIs();
+    
 }
-
+    if (sectionId === "future") {
+    // delay needed because section was hidden
+    setTimeout(loadFutureForecast, 150);
+}
 }
 
 function uploadCSV(event) {
@@ -641,10 +642,12 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => chart.resize(), 100);
         });
 });
-function loadAIFutureKPIs() {
-    fetch("/api/ai-future-forecast")
+function loadFutureForecast() {
+    fetch("/api/future-forecast")
         .then(res => res.json())
         .then(data => {
+            console.log("Future forecast:", data); // DEBUG
+
             if (!data.success) return;
 
             const container = document.getElementById("aiFutureKpis");
@@ -659,9 +662,9 @@ function loadAIFutureKPIs() {
                 card.className = "kpi-card";
 
                 card.innerHTML = `
-                    <div class="kpi-icon ${color}">📅</div>
+                    <div class="kpi-icon ${color}">🔮</div>
                     <div class="kpi-info">
-                        <p class="kpi-label">${item.month} (AI Forecast)</p>
+                        <p class="kpi-label">${item.month} Forecast</p>
                         <h2 class="kpi-value">₹ ${item.value.toLocaleString()}</h2>
                     </div>
                 `;
@@ -669,5 +672,6 @@ function loadAIFutureKPIs() {
                 container.appendChild(card);
             });
         })
-        .catch(err => console.error("AI KPI Error:", err));
+        .catch(err => console.error("Future forecast error:", err));
 }
+
