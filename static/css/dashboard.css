@@ -1,11 +1,11 @@
 :root {
-    --dark: #1a2238;
-    --dark-2: #12182b;
-    --blue: #9daaf2;
-    --orange: #ff6a3d;
-    --yellow: #f4db7d;
-    --white: #ffffff;
-    --muted: rgba(255,255,255,0.65);
+    --dark: #EFF6FF;
+    --dark-2: #DBEAFE;
+    --blue: #3B82F6;
+    --orange: #1E3A8A;
+    --yellow: #BAE6FD;
+    --white: #0F172A;
+    --muted: rgba(15, 23, 42, 0.65);
 }
 
 /* RESET */
@@ -17,8 +17,8 @@
 }
 
 body {
-    background: var(--dark);
-    color: var(--white);
+    background: #EFF6FF;
+    color: #0F172A;
 }
 
 /* ==============================
@@ -34,10 +34,11 @@ body {
    SIDEBAR
 ============================== */
 .sidebar {
-    background: var(--dark-2);
+    background: #FFFFFF;
     display: flex;
     flex-direction: column;
     padding: 20px 14px;
+    border-right: 1px solid #E0F2FE;
 }
 
 .sidebar-header {
@@ -50,7 +51,7 @@ body {
     gap: 10px;
     font-size: 18px;
     font-weight: 600;
-    color: var(--yellow);
+    color: #1E3A8A;
 }
 
 .sidebar-nav {
@@ -61,7 +62,7 @@ body {
     width: 100%;
     background: transparent;
     border: none;
-    color: var(--muted);
+    color: #475569;
     padding: 12px 14px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -74,8 +75,8 @@ body {
 
 .nav-item:hover,
 .nav-item.active {
-    background: var(--orange);
-    color: #fff;
+    background: #3B82F6;
+    color: #FFFFFF;
 }
 
 .sidebar-footer {
@@ -86,15 +87,15 @@ body {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(59, 130, 246, 0.1);
     border: none;
-    color: var(--muted);
+    color: #475569;
     cursor: pointer;
 }
 
 .logout-btn:hover {
-    background: var(--orange);
-    color: #fff;
+    background: #1E3A8A;
+    color: #FFFFFF;
 }
 
 /* ==============================
@@ -113,6 +114,7 @@ body {
 
 .page-title {
     font-size: 26px;
+    color: #0F172A;
 }
 
 .user-info {
@@ -125,8 +127,8 @@ body {
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: var(--blue);
-    color: #000;
+    background: #3B82F6;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -155,17 +157,18 @@ body {
 }
 
 .kpi-card {
-    background: #232b4a;
+    background: #FFFFFF;
     border-radius: 16px;
     padding: 18px;
     display: flex;
     gap: 15px;
     align-items: center;
+    border: 1px solid #E0F2FE;
 }
 
 .kpi-card.highlight {
-    background: linear-gradient(135deg, var(--orange), var(--yellow));
-    color: #000;
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+    color: #FFFFFF;
 }
 
 .kpi-icon {
@@ -178,12 +181,12 @@ body {
     font-size: 20px;
 }
 
-.kpi-icon.blue { background: var(--blue); color: #000; }
-.kpi-icon.orange { background: var(--orange); }
-.kpi-icon.yellow { background: var(--yellow); color: #000; }
+.kpi-icon.blue { background: #3B82F6; color: #FFFFFF; }
+.kpi-icon.orange { background: #1E3A8A; color: #FFFFFF; }
+.kpi-icon.yellow { background: #BAE6FD; color: #0F172A; }
 .kpi-icon.gradient {
-    background: linear-gradient(135deg, var(--orange), var(--yellow));
-    color: #000;
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+    color: #FFFFFF;
 }
 
 .kpi-label {
@@ -204,10 +207,11 @@ body {
    DATA CARDS
 ============================== */
 .data-card {
-    background: #1f2642;
+    background: #FFFFFF;
     border-radius: 18px;
     padding: 20px;
     margin-bottom: 25px;
+    border: 1px solid #E0F2FE;
 }
 
 .card-header {
@@ -216,12 +220,13 @@ body {
 
 .card-title {
     font-size: 16px;
-    color: var(--yellow);
+    color: #1E3A8A;
 }
 
 .card-subtitle {
     font-size: 12px;
     opacity: 0.7;
+    color: #475569;
 }
 
 /* ==============================
@@ -232,14 +237,15 @@ body {
     align-items: center;
     gap: 14px;
     padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.08);
 }
 
 .item-rank {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: var(--orange);
+    background: #3B82F6;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -247,6 +253,7 @@ body {
 
 .item-name {
     font-weight: 500;
+    color: #0F172A;
 }
 
 /* ==============================
@@ -259,26 +266,27 @@ body {
 }
 
 .category-card {
-    background: #232b4a;
+    background: #FFFFFF;
     border-radius: 14px;
     padding: 15px;
     position: relative;
+    border: 1px solid #E0F2FE;
 }
 
 .category-card.success {
-    border-left: 4px solid var(--blue);
+    border-left: 4px solid #3B82F6;
 }
 
 .category-card.warning {
-    border-left: 4px solid var(--orange);
+    border-left: 4px solid #1E3A8A;
 }
 
 .category-badge {
     position: absolute;
     top: 12px;
     right: 12px;
-    background: var(--yellow);
-    color: #000;
+    background: #BAE6FD;
+    color: #0F172A;
     padding: 3px 8px;
     border-radius: 8px;
     font-size: 11px;
@@ -294,9 +302,10 @@ body {
 }
 
 .chart-card {
-    background: #1f2642;
+    background: #FFFFFF;
     border-radius: 18px;
     padding: 20px;
+    border: 1px solid #E0F2FE;
 }
 
 .chart-container {
@@ -319,25 +328,33 @@ body {
 .form-group label {
     font-size: 12px;
     opacity: 0.7;
+    color: #475569;
 }
 
 input {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid #E0F2FE;
     margin-top: 6px;
+    background: #F1F5F9;
+    color: #0F172A;
 }
 
 .btn-generate,
 .btn-primary {
     margin-top: 22px;
     padding: 10px;
-    background: var(--orange);
+    background: #1E3A8A;
     border: none;
     border-radius: 10px;
-    color: white;
+    color: #FFFFFF;
     cursor: pointer;
+}
+
+.btn-generate:hover,
+.btn-primary:hover {
+    background: #3B82F6;
 }
 
 /* ==============================
@@ -353,8 +370,8 @@ input {
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: var(--blue);
-    color: #000;
+    background: #3B82F6;
+    color: #FFFFFF;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -388,5 +405,6 @@ input {
     width: 100%;
 }
 #aiFutureKpis .kpi-card {
-    background: #232b4a;
+    background: #FFFFFF;
+    border: 1px solid #E0F2FE;
 }
