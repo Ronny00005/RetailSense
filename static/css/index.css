@@ -19,9 +19,9 @@
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 20%, rgba(157, 170, 242, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 106, 61, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(244, 219, 125, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(186, 230, 253, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.08) 0%, transparent 50%);
     z-index: 0;
     animation: backgroundPulse 10s ease-in-out infinite;
 }
@@ -37,19 +37,19 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-xl);
-    background: var(--color-primary-light);
+    background: #FFFFFF;
     border-radius: 24px;
     padding: var(--spacing-xl);
     box-shadow: var(--shadow-xl);
-    border: 1px solid rgba(157, 170, 242, 0.1);
+    border: 1px solid #E0F2FE;
     max-width: 1100px;
     width: 100%;
     animation: fadeIn 0.6s ease;
 }
 
 body.light-mode .auth-container {
-    background: var(--color-white);
-    border-color: var(--color-gray-300);
+    background: #FFFFFF;
+    border-color: #E0F2FE;
 }
 
 /* ============================================
@@ -71,20 +71,20 @@ body.light-mode .auth-container {
 .form-title {
     font-size: 2.5rem;
     margin-bottom: var(--spacing-xs);
-    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .form-subtitle {
-    color: var(--color-gray-400);
+    color: #475569;
     font-size: 1rem;
     margin-bottom: 0;
 }
 
 body.light-mode .form-subtitle {
-    color: var(--color-gray-600);
+    color: #475569;
 }
 
 .auth-form {
@@ -107,21 +107,21 @@ body.light-mode .form-subtitle {
 }
 
 .signup-scroll::-webkit-scrollbar-track {
-    background: var(--color-primary);
+    background: #E0F2FE;
     border-radius: 10px;
 }
 
 .signup-scroll::-webkit-scrollbar-thumb {
-    background: var(--color-secondary);
+    background: #3B82F6;
     border-radius: 10px;
 }
 
 body.light-mode .signup-scroll::-webkit-scrollbar-track {
-    background: var(--color-gray-200);
+    background: #E0F2FE;
 }
 
 body.light-mode .signup-scroll::-webkit-scrollbar-thumb {
-    background: var(--color-secondary-dark);
+    background: #2563EB;
 }
 
 /* ============================================
@@ -137,22 +137,22 @@ body.light-mode .signup-scroll::-webkit-scrollbar-thumb {
 .input-label {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--color-gray-300);
+    color: #334155;
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
 
 body.light-mode .input-label {
-    color: var(--color-gray-700);
+    color: #334155;
 }
 
 .form-input {
     width: 100%;
     padding: 1rem 1.25rem;
-    background: var(--color-primary);
-    border: 2px solid rgba(157, 170, 242, 0.2);
+    background: #F1F5F9;
+    border: 2px solid #E0F2FE;
     border-radius: 12px;
-    color: var(--color-white);
+    color: #0F172A;
     font-size: 1rem;
     font-family: var(--font-primary);
     transition: all var(--transition-base);
@@ -160,23 +160,23 @@ body.light-mode .input-label {
 }
 
 body.light-mode .form-input {
-    background: var(--color-gray-100);
-    border-color: var(--color-gray-300);
-    color: var(--color-gray-900);
+    background: #F1F5F9;
+    border-color: #E0F2FE;
+    color: #0F172A;
 }
 
 .form-input:focus {
-    border-color: var(--color-secondary);
-    box-shadow: 0 0 0 4px rgba(157, 170, 242, 0.1);
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 body.light-mode .form-input:focus {
-    border-color: var(--color-secondary-dark);
-    box-shadow: 0 0 0 4px rgba(157, 170, 242, 0.2);
+    border-color: #2563EB;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
 }
 
 .form-input::placeholder {
-    color: var(--color-gray-500);
+    color: #64748B;
 }
 
 .password-input-group {
@@ -190,7 +190,7 @@ body.light-mode .form-input:focus {
     right: 1rem;
     background: transparent;
     border: none;
-    color: var(--color-gray-400);
+    color: #64748B;
     cursor: pointer;
     font-size: 1.25rem;
     transition: all var(--transition-fast);
@@ -207,7 +207,7 @@ body.light-mode .form-input:focus {
 
 .strength-meter {
     height: 4px;
-    background: rgba(157, 170, 242, 0.1);
+    background: rgba(59, 130, 246, 0.1);
     border-radius: 10px;
     overflow: hidden;
     margin-top: var(--spacing-xs);
@@ -216,14 +216,14 @@ body.light-mode .form-input:focus {
 .strength-bar {
     height: 100%;
     width: 0;
-    background: var(--color-gray-500);
+    background: #64748B;
     transition: all var(--transition-base);
     border-radius: 10px;
 }
 
 .strength-text {
     font-size: 0.75rem;
-    color: var(--color-gray-500);
+    color: #64748B;
     margin-top: 0.25rem;
     margin-bottom: 0;
 }
@@ -235,10 +235,10 @@ body.light-mode .form-input:focus {
 .btn-primary {
     width: 100%;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     border: none;
     border-radius: 12px;
-    color: var(--color-white);
+    color: #FFFFFF;
     font-size: 1rem;
     font-weight: 600;
     font-family: var(--font-display);
@@ -248,13 +248,13 @@ body.light-mode .form-input:focus {
     align-items: center;
     justify-content: center;
     gap: var(--spacing-xs);
-    box-shadow: 0 4px 12px rgba(255, 106, 61, 0.3);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
     margin-top: var(--spacing-sm);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255, 106, 61, 0.4);
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.4);
 }
 
 .btn-primary:active {
@@ -272,18 +272,18 @@ body.light-mode .form-input:focus {
 
 .switch-text {
     text-align: center;
-    color: var(--color-gray-400);
+    color: #475569;
     font-size: 0.9rem;
     margin-top: var(--spacing-md);
     margin-bottom: 0;
 }
 
 body.light-mode .switch-text {
-    color: var(--color-gray-600);
+    color: #475569;
 }
 
 .link-accent {
-    color: var(--color-accent);
+    color: #3B82F6;
     font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -292,8 +292,8 @@ body.light-mode .switch-text {
 }
 
 .link-accent:hover {
-    color: var(--color-accent-light);
-    text-decoration-color: var(--color-accent-light);
+    color: #60A5FA;
+    text-decoration-color: #60A5FA;
 }
 
 /* ============================================
@@ -304,7 +304,7 @@ body.light-mode .switch-text {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, var(--color-secondary-dark), var(--color-accent));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     border-radius: 16px;
     padding: var(--spacing-xl);
     position: relative;
@@ -312,7 +312,7 @@ body.light-mode .switch-text {
 }
 
 body.light-mode .feature-showcase {
-    background: linear-gradient(135deg, var(--color-secondary-light), var(--color-accent-light));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
 }
 
 .carousel {
@@ -331,7 +331,7 @@ body.light-mode .feature-showcase {
 }
 
 .carousel-content h3 {
-    color: var(--color-white);
+    color: #FFFFFF;
     font-size: 1.75rem;
     margin-bottom: var(--spacing-sm);
 }
@@ -354,7 +354,7 @@ body.light-mode .feature-showcase {
 .carousel-indicators button.active {
     width: 24px;
     border-radius: 5px;
-    background: var(--color-white);
+    background: #FFFFFF;
 }
 
 .carousel-control-prev,
@@ -449,9 +449,9 @@ body.light-mode .feature-showcase {
 }
 /* Carousel text fix */
 body.light-mode .carousel-content h3 {
-    color: #111827;
+    color: #FFFFFF;
 }
 
 body.light-mode .carousel-content p {
-    color: #374151;
+    color: rgba(255, 255, 255, 0.9);
 }

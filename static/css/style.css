@@ -1,49 +1,49 @@
 /* ============================================
    RETAIL SENSE - SHARED STYLES
-   Color Palette: #1a2238, #9daaf2, #ff6a3d, #f4db7d
+   Color Palette: #EFF6FF, #1E3A8A, #3B82F6, #BAE6FD
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
     /* Color Palette */
-    --color-primary: #1a2238;
-    --color-secondary: #9daaf2;
-    --color-accent: #ff6a3d;
+    --color-primary: #1E3A8A;
+    --color-secondary: #3B82F6;
+    --color-accent: #BAE6FD;
     --color-highlight: #f4db7d;
     
     /* Extended Palette */
-    --color-primary-light: #252d48;
-    --color-primary-dark: #0f1421;
-    --color-secondary-light: #b8c2f7;
-    --color-secondary-dark: #7b8ae8;
-    --color-accent-light: #ff8c66;
-    --color-accent-dark: #e54f23;
+    --color-primary-light: #1E40AF;
+    --color-primary-dark: #1E293B;
+    --color-secondary-light: #60A5FA;
+    --color-secondary-dark: #2563EB;
+    --color-accent-light: #E0F2FE;
+    --color-accent-dark: #7DD3FC;
     --color-highlight-light: #f7e8a3;
     --color-highlight-dark: #e8ca5d;
     
     /* Neutrals */
-    --color-white: #ffffff;
+    --color-white: #FFFFFF;
     --color-black: #000000;
-    --color-gray-100: #f8f9fa;
-    --color-gray-200: #e9ecef;
-    --color-gray-300: #dee2e6;
-    --color-gray-400: #ced4da;
-    --color-gray-500: #adb5bd;
-    --color-gray-600: #6c757d;
-    --color-gray-700: #495057;
-    --color-gray-800: #343a40;
-    --color-gray-900: #212529;
+    --color-gray-100: #F1F5F9;
+    --color-gray-200: #E2E8F0;
+    --color-gray-300: #CBD5E1;
+    --color-gray-400: #94A3B8;
+    --color-gray-500: #64748B;
+    --color-gray-600: #475569;
+    --color-gray-700: #334155;
+    --color-gray-800: #1E293B;
+    --color-gray-900: #0F172A;
     
     /* Typography */
     --font-primary: 'Outfit', sans-serif;
     --font-display: 'Space Grotesk', sans-serif;
     
     /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(26, 34, 56, 0.08);
-    --shadow-md: 0 4px 12px rgba(26, 34, 56, 0.12);
-    --shadow-lg: 0 8px 24px rgba(26, 34, 56, 0.16);
-    --shadow-xl: 0 16px 48px rgba(26, 34, 56, 0.2);
+    --shadow-sm: 0 2px 4px rgba(30, 58, 138, 0.08);
+    --shadow-md: 0 4px 12px rgba(30, 58, 138, 0.12);
+    --shadow-lg: 0 8px 24px rgba(30, 58, 138, 0.16);
+    --shadow-xl: 0 16px 48px rgba(30, 58, 138, 0.2);
     
     /* Transitions */
     --transition-fast: 0.15s ease;
@@ -61,13 +61,13 @@
 
 /* Light Mode Overrides */
 body.light-mode {
-    --color-primary: #f8f9fa;
-    --color-primary-light: #ffffff;
-    --color-primary-dark: #e9ecef;
-    --color-text: #1a2238;
-    --color-text-secondary: #495057;
-    --color-bg: #ffffff;
-    --color-bg-secondary: #f8f9fa;
+    --color-primary: #EFF6FF;
+    --color-primary-light: #FFFFFF;
+    --color-primary-dark: #DBEAFE;
+    --color-text: #0F172A;
+    --color-text-secondary: #475569;
+    --color-bg: #EFF6FF;
+    --color-bg-secondary: #FFFFFF;
 }
 
 /* ============================================
@@ -86,8 +86,8 @@ html {
 
 body {
     font-family: var(--font-primary);
-    background: var(--color-primary);
-    color: var(--color-white);
+    background: #EFF6FF;
+    color: #0F172A;
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
@@ -114,7 +114,7 @@ h6 { font-size: clamp(1rem, 1.5vw, 1.125rem); }
 
 p {
     margin-bottom: var(--spacing-sm);
-    color: var(--color-gray-300);
+    color: #475569;
 }
 
 a {
@@ -128,19 +128,19 @@ a {
    ============================================ */
 
 .custom-navbar {
-    background: rgba(26, 34, 56, 0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     padding: 1.25rem 0;
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid rgba(157, 170, 242, 0.1);
+    border-bottom: 1px solid #E0F2FE;
     transition: all var(--transition-base);
 }
 
 body.light-mode .custom-navbar {
     background: rgba(255, 255, 255, 0.95);
-    border-bottom: 1px solid rgba(26, 34, 56, 0.1);
+    border-bottom: 1px solid #E0F2FE;
 }
 
 .navbar-brand {
@@ -150,12 +150,12 @@ body.light-mode .custom-navbar {
     font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--color-white);
+    color: #0F172A;
     transition: all var(--transition-base);
 }
 
 body.light-mode .navbar-brand {
-    color: var(--color-primary-dark);
+    color: #0F172A;
 }
 
 .brand-icon {
@@ -169,14 +169,14 @@ body.light-mode .navbar-brand {
 }
 
 .brand-text {
-    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 body.light-mode .brand-text {
-    background: linear-gradient(135deg, var(--color-primary-dark), var(--color-accent));
+    background: linear-gradient(135deg, #1E3A8A, #3B82F6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -190,7 +190,7 @@ body.light-mode .brand-text {
     position: relative;
     font-weight: 500;
     font-size: 1rem;
-    color: var(--color-gray-300);
+    color: #475569;
     transition: all var(--transition-base);
     padding: 0.5rem 0;
 }
@@ -202,18 +202,18 @@ body.light-mode .brand-text {
     left: 0;
     width: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--color-secondary), var(--color-accent));
+    background: linear-gradient(90deg, #1E3A8A, #3B82F6);
     transition: width var(--transition-base);
 }
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--color-white);
+    color: #1E3A8A;
 }
 
 body.light-mode .nav-link:hover,
 body.light-mode .nav-link.active {
-    color: var(--color-primary-dark);
+    color: #1E3A8A;
 }
 
 .nav-link:hover::after,
@@ -222,9 +222,9 @@ body.light-mode .nav-link.active {
 }
 
 .theme-toggle {
-    background: var(--color-primary-light);
-    border: 1px solid rgba(157, 170, 242, 0.2);
-    color: var(--color-white);
+    background: #FFFFFF;
+    border: 1px solid #E0F2FE;
+    color: #1E3A8A;
     width: 42px;
     height: 42px;
     border-radius: 50%;
@@ -237,19 +237,19 @@ body.light-mode .nav-link.active {
 }
 
 body.light-mode .theme-toggle {
-    background: var(--color-gray-100);
-    border-color: var(--color-gray-300);
+    background: #FFFFFF;
+    border-color: #E0F2FE;
 }
 
 .theme-toggle:hover {
     transform: rotate(180deg) scale(1.1);
-    background: var(--color-secondary);
-    border-color: var(--color-secondary);
+    background: #3B82F6;
+    border-color: #3B82F6;
 }
 
 body.light-mode .theme-toggle:hover {
-    background: var(--color-secondary-light);
-    border-color: var(--color-secondary-light);
+    background: #60A5FA;
+    border-color: #60A5FA;
 }
 
 /* ============================================
@@ -358,8 +358,8 @@ body.light-mode .page-title,
 body.light-mode .form-title,
 body.light-mode .section-title {
     background: none !important;
-    -webkit-text-fill-color: #111827 !important;
-    color: #111827 !important;
+    -webkit-text-fill-color: #0F172A !important;
+    color: #0F172A !important;
 }
 
 /* Headings */
@@ -369,7 +369,7 @@ body.light-mode h3,
 body.light-mode h4,
 body.light-mode h5,
 body.light-mode h6 {
-    color: #111827;
+    color: #0F172A;
 }
 
 /* Normal text */
@@ -378,6 +378,5 @@ body.light-mode span,
 body.light-mode li,
 body.light-mode label,
 body.light-mode small {
-    color: #374151;
+    color: #475569;
 }
-
