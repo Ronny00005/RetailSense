@@ -534,6 +534,6 @@ def forecast_chart():
         "historical": [float(v) for v in monthly.values] + [None] * forecast_steps,
         "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
     })
-
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
