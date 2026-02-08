@@ -61,9 +61,7 @@ def process_sales_data(df):
     return df
 
 # -------------------- DATABASE --------------------
-import os
-import os
-import psycopg2
+
 
 def get_db():
     db_url = os.environ.get("DATABASE_URL")
@@ -173,19 +171,6 @@ def login():
         "name": user[1],
         "csv_uploaded": user[5]
     })
-
-
-        
-
-# -------------------- UPLOAD PAGE --------------------
-# @app.route("/upload")
-# def upload_page():
-#     if "user_id" not in session:
-#         return redirect(url_for("index"))
-#     return render_template("upload.html")
-
-
-# -------------------- CSV UPLOAD --------------------
 # -------------------- CSV UPLOAD --------------------
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
@@ -309,11 +294,7 @@ def dashboard():
         }
         for cat, val in category_sales.tail(3).items()
     ]
-
-    # ---------------- FUTURE ANALYTICS (NO ML) ----------------
-    
-
-    # ---------------- USER INFO ----------------
+# ---------------- USER INFO ----------------
     conn = get_db()
     cur = conn.cursor()
     cur.execute(
@@ -365,7 +346,7 @@ def datewise_report():
             "worst_product": "-"
         })
 
-    # 🔥 CONVERT TO PYTHON TYPES
+    #  CONVERT TO PYTHON TYPES
     sales = float(filtered_df["sales"].sum())
     profit = float(filtered_df["profit"].sum())
 
@@ -477,7 +458,7 @@ def future_forecast():
         .sum()
     )
 
-    # 🔮 Forecast model (you DON'T need to understand internals)
+    # Forecast model (you DON'T need to understand internals)
     model = SARIMAX(
         monthly_sales,
         order=(1, 1, 1),
@@ -505,6 +486,54 @@ def future_forecast():
         ]
     })
 
+@app.route("/api/forecast-chart")
+def forecast_chart():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    # ---------------- MONTHLY SALES ----------------
+    monthly = (
+        df.set_index("date")
+        .resample("ME")["sales"]
+        .sum()
+    )
+
+    if len(monthly) < 6:
+        return jsonify({
+            "success": False,
+            "message": "Not enough data for forecasting"
+        })
+
+    # ---------------- SARIMA MODEL ----------------
+    model = SARIMAX(
+        monthly,
+        order=(1, 1, 1),
+        seasonal_order=(1, 1, 1, 12)
+    )
+
+    results = model.fit(disp=False)
+
+    # Forecast next 6 months
+    forecast_steps = 6
+    forecast = results.get_forecast(steps=forecast_steps)
+    forecast_values = forecast.predicted_mean
+
+    # ---------------- LABELS ----------------
+    historical_labels = [d.strftime("%b %Y") for d in monthly.index]
+    future_labels = [
+        (monthly.index[-1] + pd.DateOffset(months=i+1)).strftime("%b %Y")
+        for i in range(forecast_steps)
+    ]
+
+    return jsonify({
+        "success": True,
+        "labels": historical_labels + future_labels,
+        "historical": [float(v) for v in monthly.values] + [None] * forecast_steps,
+        "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)

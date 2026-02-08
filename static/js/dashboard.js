@@ -1,12 +1,6 @@
-// ============================================
-// RETAIL SENSE - FLASK DASHBOARD JAVASCRIPT
-// ============================================
 
 let charts = {};
 
-// ============================================
-// INITIALIZATION
-// ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize charts if data is available
@@ -42,6 +36,18 @@ function showSection(sectionId) {
         loadCategoryCharts();
     
 }
+if (sectionId === "future") {
+    fetch("/api/forecast-chart")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
+
+            window.forecastChartData = data;
+            initializeForecastChart();
+        })
+        .catch(err => console.error("Forecast chart error:", err));
+}
+
     if (sectionId === "future") {
     // delay needed because section was hidden
     setTimeout(loadFutureForecast, 150);
@@ -70,153 +76,6 @@ function uploadCSV(event) {
         alert("Upload error");
     });
 }
-
-
-// ============================================
-// CATEGORY ANALYSIS CHARTS
-// ============================================
-
-function initializeCategoryCharts() {
-    createCategoryBarChart();
-    createCategoryPieChart();
-}
-
-function createCategoryBarChart() {
-    const ctx = document.getElementById('categoryBarChart');
-    if (!ctx) return;
-    
-    charts.categoryBar = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: categoryChartData.labels,
-            datasets: [{
-                label: 'Revenue',
-                data: categoryChartData.values,
-                backgroundColor: [
-                    'rgba(157, 170, 242, 0.8)',
-                    'rgba(255, 106, 61, 0.8)',
-                    'rgba(244, 219, 125, 0.8)',
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(167, 139, 250, 0.8)'
-                ],
-                borderColor: [
-                    '#9daaf2',
-                    '#ff6a3d',
-                    '#f4db7d',
-                    '#10b981',
-                    '#a78bfa'
-                ],
-                borderWidth: 2,
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    backgroundColor: '#1a2238',
-                    titleColor: '#fff',
-                    bodyColor: '#9daaf2',
-                    borderColor: '#9daaf2',
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                        label: (context) => 'Revenue: $' + context.parsed.y.toLocaleString()
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
-                    ticks: {
-                        color: '#6b7280',
-                        callback: (value) => '$' + (value / 1000) + 'K'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#6b7280'
-                    }
-                }
-            }
-        }
-    });
-}
-
-function createCategoryPieChart() {
-    const ctx = document.getElementById('categoryPieChart');
-    if (!ctx) return;
-    
-    charts.categoryPie = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: categoryChartData.labels,
-            datasets: [{
-                data: categoryChartData.values,
-                backgroundColor: [
-                    '#9daaf2',
-                    '#ff6a3d',
-                    '#f4db7d',
-                    '#10b981',
-                    '#a78bfa'
-                ],
-                borderWidth: 0,
-                hoverOffset: 10
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#374151',
-                        padding: 15,
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        },
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1a2238',
-                    titleColor: '#fff',
-                    bodyColor: '#9daaf2',
-                    borderColor: '#9daaf2',
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                        label: (context) => {
-                            const label = context.label || '';
-                            const value = context.parsed || 0;
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${label}: $${value.toLocaleString()} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-}
-
-// ============================================
-// FORECAST CHART
-// ============================================
-
 function initializeForecastChart() {
     const ctx = document.getElementById('forecastChart');
     if (!ctx) return;
@@ -303,78 +162,6 @@ function initializeForecastChart() {
         }
     });
 }
-
-// ============================================
-// DATE-WISE REPORT GENERATION
-// ============================================
-
-function generateReport(event) {
-    event.preventDefault();
-    
-    const dateFrom = document.getElementById('dateFrom').value;
-    const dateTo = document.getElementById('dateTo').value;
-    
-    if (!dateFrom || !dateTo) {
-        alert('Please select both dates');
-        return;
-    }
-    
-    if (new Date(dateFrom) > new Date(dateTo)) {
-        alert('From date must be before To date');
-        return;
-    }
-    
-    // Show loading state
-    const resultsDiv = document.getElementById('reportResults');
-    resultsDiv.classList.remove('hidden');
-    
-    // Send request to Flask backend
-    fetch('/api/generate-report', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            date_from: dateFrom,
-            date_to: dateTo
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Update KPI values
-        document.getElementById('reportSales').textContent = data.sales;
-        document.getElementById('reportProfit').textContent = data.profit;
-        document.getElementById('reportTopProduct').textContent = data.top_product;
-        document.getElementById('reportWorstProduct').textContent = data.worst_product;
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Failed to generate report. Please try again.');
-    });
-}
-
-// ============================================
-// DOWNLOAD FUNCTIONS
-// ============================================
-
-function downloadPDF() {
-    const dateFrom = document.getElementById('dateFrom').value;
-    const dateTo = document.getElementById('dateTo').value;
-    
-    window.location.href = `/api/download-pdf?date_from=${dateFrom}&date_to=${dateTo}`;
-}
-
-function downloadExcel() {
-    const dateFrom = document.getElementById('dateFrom').value;
-    const dateTo = document.getElementById('dateTo').value;
-    
-    window.location.href = `/api/download-excel?date_from=${dateFrom}&date_to=${dateTo}`;
-}
-
-// ============================================
-// PASSWORD CHANGE
-// ============================================
-
 function changePassword(event) {
     event.preventDefault();
 
@@ -415,9 +202,6 @@ function changePassword(event) {
     });
 }
 
-// ============================================
-// LOGOUT
-// ============================================
 
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
@@ -425,15 +209,12 @@ function logout() {
     }
 }
 
-// ============================================
-// MOBILE SIDEBAR TOGGLE
-// ============================================
 
 function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('active');
 }
 
-// Add mobile menu button if needed
+
 if (window.innerWidth <= 1024) {
     window.addEventListener('DOMContentLoaded', () => {
         const header = document.querySelector('.content-header');
@@ -564,39 +345,6 @@ function renderCategoryPieChart(labels, values) {
         }
     });
 }
-fetch("/api/monthly-sales")
-    .then(res => res.json())
-    .then(data => {
-        if (!data.success) return;
-
-        const ctx = document.getElementById("monthlySalesChart");
-
-        new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: data.labels,
-                datasets: [{
-                    label: "Monthly Sales",
-                    data: data.values,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    })
-    .catch(err => console.error("Monthly chart error:", err));
 // ============================================
 // RESPONSIVE BEHAVIOR
 // ============================================
@@ -607,7 +355,6 @@ window.addEventListener('resize', () => {
     }
 });
 
-console.log('✅ Retail Sense Dashboard Initialized');
 document.addEventListener("DOMContentLoaded", () => {
     fetch("/api/monthly-sales")
         .then(res => res.json())

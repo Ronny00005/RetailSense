@@ -18,15 +18,9 @@
             </a>
             <div class="nav-links ms-auto d-flex align-items-center">
                 <span class="user-welcome" id="userWelcome">Welcome, User!</span>
-                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                    <span class="theme-icon">🌙</span>
-                </button>
                 <a href="{{ url_for('logout') }}" class="btn-logout">
     <span>Logout</span>
-</a>
 
-    <span>Logout</span>
-</a>
 
             </div>
         </div>
@@ -177,13 +171,7 @@
             }
         });
 
-        // Theme Toggle
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.querySelector('.theme-icon');
-            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        }
-
+        
         // Back Navigation
         function goBack() {
             window.history.back();
