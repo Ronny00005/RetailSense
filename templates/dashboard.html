@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retail Sense - Analytics Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-     <!-- <link rel="stylesheet" href="dashboard.css"> -->
-    <!-- Chart.js for visualizations -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
     
-    <!-- Dashboard Container - 1:3 Ratio -->
     <div class="dashboard-container">
         
-        <!-- LEFT SIDEBAR (25%) -->
         <aside class="sidebar">
             
-            <!-- Logo/Header -->
+            
             <div class="sidebar-header">
                 <div class="logo">
                     <span class="logo-icon">📊</span>
@@ -25,7 +21,7 @@
                 </div>
             </div>
 
-            <!-- Navigation Menu -->
+           
             <nav class="sidebar-nav">
                 <button class="nav-item active" onclick="showSection('overview')">
                     <span class="nav-icon">📈</span>
@@ -57,7 +53,7 @@
 </button>
             </nav>
 
-            <!-- Logout Button -->
+            
             <div class="sidebar-footer">
                 <button class="logout-btn" onclick="logout()">
                     <span class="nav-icon">🚪</span>
@@ -67,10 +63,10 @@
 
         </aside>
 
-        <!-- RIGHT CONTENT AREA (75%) -->
+       
         <main class="main-content">
             
-            <!-- Top Header -->
+          
             <header class="content-header">
                 <h1 class="page-title">Dashboard</h1>
                 <div class="user-info">
@@ -79,10 +75,10 @@
                 </div>
             </header>
 
-            <!-- Content Sections -->
+            
             <div class="content-body">
 
-                <!-- SECTION 1: OVERALL VIEW -->
+                
                 <section id="overview" class="content-section active">
                     
                     <!-- KPI Cards -->

@@ -451,27 +451,40 @@ def future_forecast():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    # Monthly sales
     monthly_sales = (
         df.set_index("date")
         .resample("ME")["sales"]
         .sum()
     )
 
-    # Forecast model (you DON'T need to understand internals)
-    model = SARIMAX(
-        monthly_sales,
-        order=(1, 1, 1),
-        seasonal_order=(1, 1, 1, 12)
-    )
+    # ✅ Ensure minimum data
+    if len(monthly_sales) < 12:
+        return jsonify({
+            "success": False,
+            "message": "Not enough data for forecasting"
+        })
 
-    results = model.fit(disp=False)
+    try:
+        model = SARIMAX(
+            monthly_sales,
+            order=(1, 1, 1),
+            seasonal_order=(1, 1, 1, 12),
+            enforce_stationarity=False,
+            enforce_invertibility=False
+        )
 
-    forecast = results.get_forecast(steps=12)
-    forecast_values = forecast.predicted_mean
+        results = model.fit(disp=False)
+
+        forecast = results.get_forecast(steps=12)
+        forecast_values = forecast.predicted_mean.fillna(0)
+
+    except Exception as e:
+        # ✅ FAIL-SAFE fallback (VERY IMPORTANT)
+        avg_sales = monthly_sales.tail(6).mean()
+        forecast_values = [avg_sales] * 12
 
     future_months = [
-        (monthly_sales.index[-1] + pd.DateOffset(months=i+1)).strftime("%b")
+        (monthly_sales.index[-1] + pd.DateOffset(months=i + 1)).strftime("%b %Y")
         for i in range(12)
     ]
 
@@ -480,11 +493,12 @@ def future_forecast():
         "kpis": [
             {
                 "month": future_months[i],
-                "value": round(float(forecast_values.iloc[i]), 2)
+                "value": round(float(forecast_values[i]), 2)
             }
             for i in range(12)
         ]
     })
+
 
 @app.route("/api/forecast-chart")
 def forecast_chart():
@@ -542,26 +556,40 @@ def inventory():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    monthly = (
-        df.set_index("date")
-        .resample("ME")["quantity"]
-        .sum()
-    )
+    if "stock_left" not in df.columns:
+        return jsonify({
+            "success": False,
+            "message": "Stock data not found in CSV"
+        })
 
-    forecast_demand = int(monthly.tail(3).mean())
-    current_stock = int(df["quantity"].sum() * 0.3)  # demo logic
+    # ---------------- CURRENT STOCK ----------------
+    current_stock = int(df["stock_left"].sum())
 
-    if current_stock < forecast_demand:
-        action = "Reorder Required"
+    # ---------------- DAILY SALES RATE ----------------
+    total_days = (df["date"].max() - df["date"].min()).days
+    total_days = max(total_days, 1)
+
+    avg_daily_sales = df["quantity"].sum() / total_days
+
+    # ---------------- DAYS OF STOCK LEFT ----------------
+    days_of_stock = round(current_stock / avg_daily_sales, 1)
+
+    # ---------------- SMART ACTION LOGIC ----------------
+    if days_of_stock < 10:
+        action = "Urgent Reorder"
+    elif days_of_stock < 20:
+        action = "Reorder Soon"
     else:
         action = "Stock Sufficient"
 
     return jsonify({
         "success": True,
-        "forecast": forecast_demand,
         "current_stock": current_stock,
+        "avg_daily_sales": round(avg_daily_sales, 2),
+        "days_of_stock_left": days_of_stock,
         "action": action
     })
+
 @app.route("/api/categories")
 def get_categories():
     if "user_id" not in session:
@@ -614,6 +642,47 @@ def category_summary():
         "best_item": str(best_item),
         "worst_item": str(worst_item)
     })
+@app.route("/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"success": False, "message": "Invalid request"}), 400
+
+    email = data.get("email")
+    new_password = data.get("password")
+
+    if not email or not new_password:
+        return jsonify({"success": False, "message": "Missing fields"}), 400
+
+    conn = None
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+
+       
+        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+        user = cur.fetchone()
+
+        if not user:
+            return jsonify({"success": False, "message": "User not found"}), 404
+
+        hashed_password = generate_password_hash(new_password)
+
+        cur.execute(
+            "UPDATE users SET password = %s WHERE email = %s",
+            (hashed_password, email)
+        )
+
+        conn.commit()   
+        return jsonify({"success": True})
+
+    except Exception as e:
+        print("RESET ERROR:", e)
+        return jsonify({"success": False, "message": "Reset failed"}), 500
+
+    finally:
+        if conn:
+            conn.close()
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
