@@ -36,13 +36,20 @@ def load_user_csv(user_id):
     if not result or not result[0]:
         return None
 
-    df = pd.read_csv(result[0])
+    csv_path = result[0]
+
+    if not os.path.exists(csv_path):
+        print("CSV FILE NOT FOUND:", csv_path)
+        return None
+
+    df = pd.read_csv(csv_path)
 
     if "date" not in df.columns:
         raise Exception("CSV must contain a 'date' column")
 
     df["date"] = pd.to_datetime(df["date"])
     return df
+
 def process_sales_data(df):
     # Clean columns
     df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
