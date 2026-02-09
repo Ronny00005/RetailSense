@@ -57,6 +57,11 @@ if (sectionId === "future") {
     // delay needed because section was hidden
     setTimeout(loadFutureForecast, 150);
 }
+if (sectionId === "category") {
+    loadCategoryCharts();
+    loadCategoryDropdown();
+}
+
 }
 
 function uploadCSV(event) {
@@ -414,5 +419,48 @@ function renderInventoryChart(data) {
         }
     });
 }
+function loadCategoryDropdown() {
+    fetch("/api/categories")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
+
+            const select = document.getElementById("categorySelect");
+            select.innerHTML = `<option value="">-- Select Category --</option>`;
+
+            data.categories.forEach(cat => {
+                const opt = document.createElement("option");
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        });
+}
+function fetchCategorySummary() {
+    const category = document.getElementById("categorySelect").value;
+    if (!category) return;
+
+    fetch("/api/category-summary", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ category })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) return;
+
+        document.getElementById("catSales").innerText =
+            "₹ " + data.total_sales.toLocaleString();
+
+        document.getElementById("catProfit").innerText =
+            "₹ " + data.total_profit.toLocaleString();
+
+        document.getElementById("catBest").innerText = data.best_item;
+        document.getElementById("catWorst").innerText = data.worst_item;
+
+        document.getElementById("categorySummary").style.display = "grid";
+    });
+}
+
 
 

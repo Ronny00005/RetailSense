@@ -205,6 +205,59 @@
                             </div>
                         </div>
                     </div>
+                    <!-- CATEGORY DROPDOWN ANALYSIS -->
+<div class="data-card">
+    <div class="card-header">
+        <h3 class="card-title">Category-wise Detailed Analysis</h3>
+        <p class="card-subtitle">Select a category to view insights</p>
+    </div>
+
+    <!-- Dropdown -->
+    <div class="form-row">
+        <div class="form-group">
+            <label>Select Category</label>
+            <select id="categorySelect" onchange="fetchCategorySummary()">
+                <option value="">-- Select Category --</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Result KPIs -->
+    <div class="kpi-grid" id="categorySummary" style="margin-top: 20px; display: none;">
+        <div class="kpi-card">
+            <div class="kpi-icon blue">💰</div>
+            <div>
+                <p class="kpi-label">Total Sales</p>
+                <h2 class="kpi-value" id="catSales">-</h2>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon orange">📊</div>
+            <div>
+                <p class="kpi-label">Total Profit</p>
+                <h2 class="kpi-value" id="catProfit">-</h2>
+            </div>
+        </div>
+
+        <div class="kpi-card highlight">
+            <div class="kpi-icon gradient">🏆</div>
+            <div>
+                <p class="kpi-label">Best Item</p>
+                <h2 class="kpi-value small" id="catBest">-</h2>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon yellow">📉</div>
+            <div>
+                <p class="kpi-label">Least Selling Item</p>
+                <h2 class="kpi-value small" id="catWorst">-</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
 
                 </section>
 

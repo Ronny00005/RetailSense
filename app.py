@@ -562,6 +562,58 @@ def inventory():
         "current_stock": current_stock,
         "action": action
     })
+@app.route("/api/categories")
+def get_categories():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    categories = sorted(df["category"].dropna().unique().tolist())
+
+    return jsonify({
+        "success": True,
+        "categories": categories
+    })
+@app.route("/api/category-summary", methods=["POST"])
+def category_summary():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    data = request.get_json()
+    category = data.get("category")
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    cat_df = df[df["category"] == category]
+
+    if cat_df.empty:
+        return jsonify({"success": False})
+
+    total_sales = float(cat_df["sales"].sum())
+    total_profit = float(cat_df["profit"].sum())
+
+    best_item = (
+        cat_df.groupby("item_name")["quantity"]
+        .sum()
+        .idxmax()
+    )
+
+    worst_item = (
+        cat_df.groupby("item_name")["quantity"]
+        .sum()
+        .idxmin()
+    )
+
+    return jsonify({
+        "success": True,
+        "total_sales": round(total_sales, 2),
+        "total_profit": round(total_profit, 2),
+        "best_item": str(best_item),
+        "worst_item": str(worst_item)
+    })
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
