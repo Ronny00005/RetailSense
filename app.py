@@ -5,7 +5,6 @@ from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
 
 
-import json
 
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -51,13 +50,12 @@ def load_user_csv(user_id):
     return df
 
 def process_sales_data(df):
-    # Clean columns
+    
     df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
-    # Ensure date
+   
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
 
-    # Derived metrics
     if "cost_price" not in df.columns:
         df["cost_price"] = df["selling_price"] * 0.7  # fallback
 
@@ -67,7 +65,6 @@ def process_sales_data(df):
    
     return df
 
-# -------------------- DATABASE --------------------
 
 
 def get_db():
@@ -86,12 +83,12 @@ def get_db():
 
 
 
-# -------------------- HELPERS --------------------
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# -------------------- ROUTES --------------------
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -105,7 +102,7 @@ def about():
 def faqs():
     return render_template("faqs.html")
 
-# -------------------- SIGNUP --------------------
+
 
 
 @app.route("/signup", methods=["POST"])
@@ -149,7 +146,6 @@ def signup():
 
 
 
-# -------------------- LOGIN --------------------
 
 
 @app.route("/login", methods=["POST"])
@@ -178,7 +174,7 @@ def login():
         "name": user[1],
         "csv_uploaded": user[5]
     })
-# -------------------- CSV UPLOAD --------------------
+
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     if "user_id" not in session:
@@ -187,7 +183,7 @@ def upload():
     if request.method == "GET":
         return render_template("upload.html")
 
-    # ---------- POST ----------
+   
     if "file" not in request.files:
         return jsonify({"success": False, "message": "No file uploaded"})
 
@@ -216,18 +212,16 @@ def upload():
 
 
 
-# -------------------- DASHBOARD --------------------
 
 
 
-# -------------------- LOGOUT --------------------
+
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
 
 
-# -------------------- RUN --------------------
 
 
     
@@ -236,7 +230,7 @@ def dashboard():
     if "user_id" not in session:
         return redirect(url_for("index"))
 
-    # ✅ Check DB first
+    
     conn = get_db()
     cur = conn.cursor()
     cur.execute(
@@ -246,7 +240,7 @@ def dashboard():
     csv_uploaded, csv_path = cur.fetchone()
     conn.close()
 
-    # ❌ Never uploaded
+    
     if not csv_uploaded:
         return redirect(url_for("upload"))
 
@@ -262,17 +256,16 @@ def dashboard():
         conn.close()
         return redirect(url_for("upload"))
 
-    # ✅ Safe to load CSV
     df = pd.read_csv(csv_path)
     df = process_sales_data(df)
 
-    # -------- KPIs --------
+    
     total_sales = round(df["sales"].sum(), 2)
     net_profit = round(df["profit"].sum(), 2)
     avg_profit = round(df["profit"].mean(), 2)
 
     top_item = df.groupby("item_name")["quantity"].sum().idxmax()
-    # ---------- TOP 5 ITEMS ----------
+    
     top_5_df = (
     df.groupby("item_name")
     .agg(
@@ -283,7 +276,7 @@ def dashboard():
     .head(5)
     .reset_index()
     )
-    # ---------- CATEGORY ANALYSIS ----------
+   
     category_sales = (
         df.groupby("category")["sales"]
         .sum()
@@ -319,7 +312,7 @@ def dashboard():
     for _, row in top_5_df.iterrows()
     ]
 
-    # -------- USER INFO --------
+    
     conn = get_db()
     cur = conn.cursor()
     cur.execute("SELECT email FROM users WHERE id = %s", (session["user_id"],))
@@ -337,7 +330,6 @@ def dashboard():
     avg_profit=avg_profit,
     top_item=top_item,
 
-    # 🔥 THESE 3 WERE MISSING
     top_5_items=top_5_items,
     top_3_categories=top_3_categories,
     bottom_3_categories=bottom_3_categories
@@ -370,7 +362,7 @@ def datewise_report():
             "worst_product": "-"
         })
 
-    #  CONVERT TO PYTHON TYPES
+    
     sales = float(filtered_df["sales"].sum())
     profit = float(filtered_df["profit"].sum())
 
@@ -488,13 +480,13 @@ def inventory():
             "action": "No Data"
         })
 
-    # ---------- CURRENT STOCK ----------
+    
     current_stock = int(df["stock_left"].sum())
 
-    # ---------- TOTAL QUANTITY (🔥 MISSING FIX) ----------
+   
     total_quantity = df["quantity"].sum()
 
-    # ---------- FORECAST DEMAND ----------
+    
     monthly_demand = (
         df.set_index("date")
         .resample("ME")["quantity"]
@@ -502,7 +494,7 @@ def inventory():
     )
     forecast_demand = int(monthly_demand.tail(3).mean()) if len(monthly_demand) else 0
 
-    # ---------- SAFE DAILY SALES ----------
+    
     if total_quantity <= 0:
         return jsonify({
             "success": True,
@@ -515,7 +507,7 @@ def inventory():
     avg_daily_sales = total_quantity / total_days
     days_left = round(current_stock / avg_daily_sales, 1)
 
-    # ---------- ACTION ----------
+    
     if days_left < 10:
         action = "Urgent Reorder Required"
     elif days_left < 20:
@@ -583,17 +575,24 @@ def category_summary():
         "best_item": str(best_item),
         "worst_item": str(worst_item)
     })
-@app.route("/reset-password", methods=["POST"])
-def reset_password():
+@app.route("/api/change-password", methods=["POST"])
+def change_password():
+    # 1. SECURITY: Ensure user is logged in
+    if "user_id" not in session:
+        return jsonify({"success": False, "message": "Unauthorized access"}), 401
+
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"success": False, "message": "Invalid request"}), 400
 
-    email = data.get("email")
-    new_password = data.get("password")
+    current_password = data.get("current_password")
+    new_password = data.get("new_password")
 
-    if not email or not new_password:
-        return jsonify({"success": False, "message": "Missing fields"}), 400
+    
+    if not current_password or not new_password:
+        return jsonify({"success": False, "message": "Both password fields are required"}), 400
+    if len(new_password) < 8:
+        return jsonify({"success": False, "message": "New password must be at least 8 characters long"}), 400
 
     conn = None
     try:
@@ -601,25 +600,31 @@ def reset_password():
         cur = conn.cursor()
 
        
-        cur.execute("SELECT id FROM users WHERE email = %s", (email,))
-        user = cur.fetchone()
+        cur.execute("SELECT password FROM users WHERE id = %s", (session["user_id"],))
+        result = cur.fetchone()
 
-        if not user:
+        if not result:
             return jsonify({"success": False, "message": "User not found"}), 404
 
-        hashed_password = generate_password_hash(new_password)
+        stored_hash = result[0]
 
+        if not check_password_hash(stored_hash, current_password):
+            return jsonify({"success": False, "message": "Current password is incorrect"}), 401
+
+        
+        new_hash = generate_password_hash(new_password)
+        
         cur.execute(
-            "UPDATE users SET password = %s WHERE email = %s",
-            (hashed_password, email)
+            "UPDATE users SET password = %s WHERE id = %s",
+            (new_hash, session["user_id"])
         )
+        conn.commit()
 
-        conn.commit()   
-        return jsonify({"success": True})
+        return jsonify({"success": True, "message": "Password updated successfully"})
 
     except Exception as e:
-        print("RESET ERROR:", e)
-        return jsonify({"success": False, "message": "Reset failed"}), 500
+        print("CHANGE PASSWORD ERROR:", e)
+        return jsonify({"success": False, "message": "Server error"}), 500
 
     finally:
         if conn:
@@ -632,7 +637,7 @@ def product_intelligence():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    # ---------- PRODUCT LEVEL AGGREGATION ----------
+    
     product_df = (
         df.groupby("item_name")
         .agg(
@@ -643,7 +648,7 @@ def product_intelligence():
         .reset_index()
     )
 
-    # ---------- ABC ANALYSIS ----------
+    
     product_df = product_df.sort_values("revenue", ascending=False)
     total_revenue = product_df["revenue"].sum()
     product_df["cum_pct"] = product_df["revenue"].cumsum() / total_revenue * 100
@@ -657,7 +662,7 @@ def product_intelligence():
 
     product_df["abc_class"] = product_df["cum_pct"].apply(abc_class)
 
-    # ---------- PROFIT vs VOLUME ----------
+    
     avg_profit = product_df["profit"].mean()
     avg_qty = product_df["quantity"].mean()
 
