@@ -448,23 +448,29 @@ def future_forecast():
     if "user_id" not in session:
         return jsonify({"success": False}), 401
 
-    df = load_user_csv(session["user_id"])
-    df = process_sales_data(df)
-
-    monthly_sales = (
-        df.set_index("date")
-        .resample("ME")["sales"]
-        .sum()
-    )
-
-    # ✅ Ensure minimum data
-    if len(monthly_sales) < 12:
-        return jsonify({
-            "success": False,
-            "message": "Not enough data for forecasting"
-        })
-
     try:
+        df = load_user_csv(session["user_id"])
+        df = process_sales_data(df)
+
+        
+        if "sales" not in df.columns:
+            return jsonify({
+                "success": False,
+                "message": "Sales column missing in CSV"
+            })
+
+        monthly_sales = (
+            df.set_index("date")
+            .resample("ME")["sales"]
+            .sum()
+        )
+
+        if len(monthly_sales) < 6:
+            return jsonify({
+                "success": False,
+                "message": "Not enough data for forecast"
+            })
+
         model = SARIMAX(
             monthly_sales,
             order=(1, 1, 1),
@@ -476,28 +482,33 @@ def future_forecast():
         results = model.fit(disp=False)
 
         forecast = results.get_forecast(steps=12)
-        forecast_values = forecast.predicted_mean.fillna(0)
+        forecast_values = forecast.predicted_mean.fillna(monthly_sales.mean())
 
-    except Exception as e:
-        # ✅ FAIL-SAFE fallback (VERY IMPORTANT)
-        avg_sales = monthly_sales.tail(6).mean()
-        forecast_values = [avg_sales] * 12
-
-    future_months = [
-        (monthly_sales.index[-1] + pd.DateOffset(months=i + 1)).strftime("%b %Y")
-        for i in range(12)
-    ]
-
-    return jsonify({
-        "success": True,
-        "kpis": [
-            {
-                "month": future_months[i],
-                "value": round(float(forecast_values[i]), 2)
-            }
+        future_months = [
+            (monthly_sales.index[-1] + pd.DateOffset(months=i + 1)).strftime("%b %Y")
             for i in range(12)
         ]
-    })
+
+        return jsonify({
+            "success": True,
+            "kpis": [
+                {
+                    "month": future_months[i],
+                    "value": round(float(forecast_values.iloc[i]), 2)
+                }
+                for i in range(12)
+            ]
+        })
+
+    except Exception as e:
+        
+        print("FUTURE FORECAST ERROR:", e)
+
+        return jsonify({
+            "success": False,
+            "message": "Forecast calculation failed"
+        })
+
 
 
 @app.route("/api/forecast-chart")
@@ -565,30 +576,37 @@ def inventory():
     # ---------------- CURRENT STOCK ----------------
     current_stock = int(df["stock_left"].sum())
 
-    # ---------------- DAILY SALES RATE ----------------
+    # ---------------- DATE RANGE ----------------
     total_days = (df["date"].max() - df["date"].min()).days
     total_days = max(total_days, 1)
 
-    avg_daily_sales = df["quantity"].sum() / total_days
+    # ---------------- DAILY SALES RATE ----------------
+    total_quantity = df["quantity"].sum()
 
-    # ---------------- DAYS OF STOCK LEFT ----------------
-    days_of_stock = round(current_stock / avg_daily_sales, 1)
-
-    # ---------------- SMART ACTION LOGIC ----------------
-    if days_of_stock < 10:
-        action = "Urgent Reorder"
-    elif days_of_stock < 20:
-        action = "Reorder Soon"
+    if total_quantity <= 0:
+        avg_daily_sales = 0
+        days_of_stock = float("inf")
+        action = "No Sales Data"
     else:
-        action = "Stock Sufficient"
+        avg_daily_sales = total_quantity / total_days
+        days_of_stock = round(current_stock / avg_daily_sales, 1)
+
+        # ---------------- SMART ACTION LOGIC ----------------
+        if days_of_stock < 10:
+            action = "Urgent Reorder"
+        elif days_of_stock < 20:
+            action = "Reorder Soon"
+        else:
+            action = "Stock Sufficient"
 
     return jsonify({
         "success": True,
         "current_stock": current_stock,
         "avg_daily_sales": round(avg_daily_sales, 2),
-        "days_of_stock_left": days_of_stock,
+        "days_of_stock_left": None if days_of_stock == float("inf") else days_of_stock,
         "action": action
     })
+
 
 @app.route("/api/categories")
 def get_categories():
