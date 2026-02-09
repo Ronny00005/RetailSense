@@ -43,6 +43,10 @@
                     <span class="nav-icon">📅</span>
                     <span class="nav-text">Date-wise Report</span>
                 </button>
+                <button class="nav-item" onclick="showSection('inventory')">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Inventory</span>
+                </button>
                 <button class="nav-item" onclick="showSection('profile')">
                     <span class="nav-icon">👤</span>
                     <span class="nav-text">Profile</span>
@@ -306,7 +310,50 @@
                     </div>
 
                 </section>
-               
+               <!-- SECTION: INVENTORY -->
+<section id="inventory" class="content-section">
+
+    <!-- Inventory KPIs -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon blue">📊</div>
+            <div class="kpi-info">
+                <p class="kpi-label">Forecasted Demand</p>
+                <h2 class="kpi-value" id="invForecast">-</h2>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon orange">📦</div>
+            <div class="kpi-info">
+                <p class="kpi-label">Current Stock</p>
+                <h2 class="kpi-value" id="invStock">-</h2>
+            </div>
+        </div>
+
+        <div class="kpi-card highlight">
+            <div class="kpi-icon gradient">⚠️</div>
+            <div class="kpi-info">
+                <p class="kpi-label">Action</p>
+                <h2 class="kpi-value small" id="invAction">-</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Chart -->
+    <div class="data-card">
+        <div class="card-header">
+            <h3 class="card-title">Inventory Requirement Analysis</h3>
+            <p class="card-subtitle">Demand vs Available Stock</p>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="inventoryChart"></canvas>
+        </div>
+    </div>
+
+</section>
+
 <!-- SECTION: UPLOAD CSV -->
 <section id="upload" class="content-section">
 

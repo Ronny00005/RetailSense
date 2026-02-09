@@ -534,6 +534,35 @@ def forecast_chart():
         "historical": [float(v) for v in monthly.values] + [None] * forecast_steps,
         "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
     })
+@app.route("/api/inventory")
+def inventory():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    monthly = (
+        df.set_index("date")
+        .resample("ME")["quantity"]
+        .sum()
+    )
+
+    forecast_demand = int(monthly.tail(3).mean())
+    current_stock = int(df["quantity"].sum() * 0.3)  # demo logic
+
+    if current_stock < forecast_demand:
+        action = "Reorder Required"
+    else:
+        action = "Stock Sufficient"
+
+    return jsonify({
+        "success": True,
+        "forecast": forecast_demand,
+        "current_stock": current_stock,
+        "action": action
+    })
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)

@@ -79,7 +79,11 @@ function uploadCSV(event) {
 function initializeForecastChart() {
     const ctx = document.getElementById('forecastChart');
     if (!ctx) return;
-    
+
+    if (charts.forecast) {
+        charts.forecast.destroy();
+    }
+
     charts.forecast = new Chart(ctx, {
         type: 'line',
         data: {
@@ -88,80 +92,27 @@ function initializeForecastChart() {
                 {
                     label: 'Historical Sales',
                     data: forecastChartData.historical,
-                    borderColor: '#9daaf2',
-                    backgroundColor: 'rgba(157, 170, 242, 0.1)',
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#9daaf2',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
+                    tension: 0.4
                 },
                 {
                     label: 'Predicted Sales',
                     data: forecastChartData.predicted,
-                    borderColor: '#ff6a3d',
-                    backgroundColor: 'rgba(255, 106, 61, 0.1)',
+                    borderDash: [6, 6],
                     borderWidth: 3,
-                    borderDash: [5, 5],
                     fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#ff6a3d',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointRadius: 4
+                    tension: 0.4
                 }
             ]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#374151',
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1a2238',
-                    titleColor: '#fff',
-                    bodyColor: '#9daaf2',
-                    borderColor: '#9daaf2',
-                    borderWidth: 1,
-                    padding: 12,
-                    callbacks: {
-                        label: (context) => context.dataset.label + ': $' + context.parsed.y.toLocaleString()
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: 'rgba(0, 0, 0, 0.05)'
-                    },
-                    ticks: {
-                        color: '#6b7280',
-                        callback: (value) => '$' + (value / 1000) + 'K'
-                    }
-                },
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#6b7280'
-                    }
-                }
-            }
+            maintainAspectRatio: false
         }
     });
 }
+
 function changePassword(event) {
     event.preventDefault();
 
@@ -412,6 +363,51 @@ function loadFutureForecast() {
                 container.appendChild(card);
             });
         });
+}
+let inventoryChart = null;
+
+function loadInventory() {
+    fetch("/api/inventory")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
+
+            document.getElementById("invForecast").innerText =
+                data.forecast.toLocaleString();
+
+            document.getElementById("invStock").innerText =
+                data.current_stock.toLocaleString();
+
+            document.getElementById("invAction").innerText =
+                data.action;
+
+            renderInventoryChart(data);
+        });
+}
+
+function renderInventoryChart(data) {
+    const ctx = document.getElementById("inventoryChart");
+
+    if (inventoryChart) inventoryChart.destroy();
+
+    inventoryChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["Forecast Demand", "Current Stock"],
+            datasets: [{
+                data: [data.forecast, data.current_stock],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
 }
 
 
