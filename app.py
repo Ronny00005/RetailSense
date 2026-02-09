@@ -567,6 +567,7 @@ def forecast_chart():
         "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
     })
 
+
 @app.route("/api/inventory")
 def inventory():
     if "user_id" not in session:
@@ -589,29 +590,41 @@ def inventory():
     # ---------- CURRENT STOCK ----------
     current_stock = int(df["stock_left"].sum())
 
-    # ---------- FORECAST DEMAND (last 3 months avg) ----------
+    # ---------- TOTAL QUANTITY (🔥 MISSING FIX) ----------
+    total_quantity = df["quantity"].sum()
+
+    # ---------- FORECAST DEMAND ----------
     monthly_demand = (
         df.set_index("date")
         .resample("ME")["quantity"]
         .sum()
     )
-
     forecast_demand = int(monthly_demand.tail(3).mean()) if len(monthly_demand) else 0
+
+    # ---------- SAFE DAILY SALES ----------
+    if total_quantity <= 0:
+        return jsonify({
+            "success": True,
+            "forecast": forecast_demand,
+            "current_stock": current_stock,
+            "action": "No Sales Data"
+        })
+
     total_days = max((df["date"].max() - df["date"].min()).days, 1)
     avg_daily_sales = total_quantity / total_days
     days_left = round(current_stock / avg_daily_sales, 1)
 
     # ---------- ACTION ----------
     if days_left < 10:
-        action = " Urgent Reorder Required"
-    elif days_left <20:
+        action = "Urgent Reorder Required"
+    elif days_left < 20:
         action = "Reorder Soon"
     else:
         action = "Stock Sufficient"
 
     return jsonify({
         "success": True,
-        "forecast": forecast_demand,   # ✅ THIS FIXES JS
+        "forecast": forecast_demand,
         "current_stock": current_stock,
         "action": action
     })
