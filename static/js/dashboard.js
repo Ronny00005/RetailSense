@@ -34,7 +34,11 @@ function showSection(sectionId) {
     // Load charts only when needed
     if (sectionId === "category") {
         loadCategoryCharts();
-    
+     if (sectionId === "inventory") {
+        setTimeout(() => {
+            loadInventory();
+        }, 200);
+    }
 }
 if (sectionId === "future") {
     fetch("/api/forecast-chart")
