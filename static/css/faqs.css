@@ -1,10 +1,4 @@
-/* ============================================
-   FAQS PAGE STYLES
-   ============================================ */
 
-/* ============================================
-   HERO SECTION
-   ============================================ */
 
 .faq-hero {
     text-align: center;
@@ -12,9 +6,7 @@
     animation: fadeIn 0.6s ease;
 }
 
-/* ============================================
-   FAQ CONTAINER
-   ============================================ */
+
 
 .faq-container {
     max-width: 900px;
@@ -46,9 +38,7 @@ body.light-mode .faq-category {
     font-size: 2rem;
 }
 
-/* ============================================
-   FAQ ITEMS
-   ============================================ */
+
 
 .faq-item {
     background: #FFFFFF;
@@ -145,9 +135,7 @@ body.light-mode .faq-answer p {
     color: #475569;
 }
 
-/* ============================================
-   CONTACT SECTION
-   ============================================ */
+
 
 .contact-section {
     margin-top: var(--spacing-2xl);
@@ -224,9 +212,7 @@ body.light-mode .contact-card {
     transform: translateY(0) scale(1);
 }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
+
 
 @keyframes accordionOpen {
     from {
@@ -250,9 +236,6 @@ body.light-mode .contact-card {
     }
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
 
 @media (max-width: 768px) {
     .faq-hero {

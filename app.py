@@ -3,7 +3,7 @@ from psycopg2.extras  import RealDictCursor
 import io
 from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
-from statsmodels.tsa.statespace.sarimax import SARIMAX
+
 
 import json
 
@@ -450,135 +450,9 @@ def download_excel():
 def handle_exception(e):
     print("UNHANDLED ERROR:", e)
     return jsonify({"error": str(e)}), 500
-@app.route("/api/future-forecast")
-def future_forecast():
-    if "user_id" not in session:
-        return jsonify({"success": False}), 401
-
-    try:
-        df = load_user_csv(session["user_id"])
-        df = process_sales_data(df)
-
-        if "sales" not in df.columns:
-            return jsonify({
-                "success": False,
-                "message": "Sales column missing in CSV"
-            })
-
-        # ---------------- DAILY SALES ----------------
-        daily_sales = (
-            df.set_index("date")
-            .resample("D")["sales"]
-            .sum()
-        )
-
-        # Limit to last 365 days for performance
-        daily_sales = daily_sales.tail(365)
-
-        if len(daily_sales) < 60:
-            return jsonify({
-                "success": False,
-                "message": "Not enough data for forecast"
-            })
-
-        # ---------------- SARIMAX (WEEKLY SEASONALITY) ----------------
-        model = SARIMAX(
-            daily_sales,
-            order=(1, 1, 1),
-            seasonal_order=(1, 1, 1, 7),  # ✅ weekly pattern
-            enforce_stationarity=False,
-            enforce_invertibility=False
-        )
-
-        results = model.fit(disp=False)
-
-        # ---------------- FORECAST NEXT 365 DAYS ----------------
-        forecast_days = 365
-        forecast = results.get_forecast(steps=forecast_days)
-        daily_forecast = forecast.predicted_mean.clip(lower=0)
-
-        # ---------------- CONVERT DAILY → MONTHLY ----------------
-        monthly_forecast = (
-            daily_forecast
-            .resample("ME")
-            .sum()
-            .head(12)   # next 12 months
-        )
-
-        future_months = [
-            d.strftime("%b %Y") for d in monthly_forecast.index
-        ]
-
-        return jsonify({
-            "success": True,
-            "kpis": [
-                {
-                    "month": future_months[i],
-                    "value": round(float(monthly_forecast.iloc[i]), 2)
-                }
-                for i in range(len(monthly_forecast))
-            ]
-        })
-
-    except Exception as e:
-        print("FUTURE FORECAST ERROR:", e)
-        return jsonify({
-            "success": False,
-            "message": "Forecast calculation failed"
-        })
 
 
-@app.route("/api/forecast-chart")
-def forecast_chart():
-    if "user_id" not in session:
-        return jsonify({"success": False}), 401
 
-    df = load_user_csv(session["user_id"])
-    df = process_sales_data(df)
-
-    # ---------------- MONTHLY SALES ----------------
-    monthly = (
-        df.set_index("date")
-        .resample("ME")["sales"]
-        .sum()
-    )
-
-    if len(monthly) < 6:
-        return jsonify({
-            "success": False,
-            "message": "Not enough data for forecasting"
-        })
-
-    # ---------------- SARIMA MODEL ----------------
-    model = SARIMAX(
-        monthly,
-        order=(1, 1, 1),
-        seasonal_order=(1, 1, 1, 12)
-    )
-
-    results = model.fit(disp=False)
-
-    # Forecast next 6 months
-    forecast_steps = 6
-    forecast = results.get_forecast(steps=forecast_steps)
-    forecast_values = forecast.predicted_mean
-
-    # ---------------- LABELS ----------------
-    historical_labels = [d.strftime("%b %Y") for d in monthly.index]
-    future_labels = [
-        (monthly.index[-1] + pd.DateOffset(months=i+1)).strftime("%b %Y")
-        for i in range(forecast_steps)
-    ]
-
-    return jsonify({
-        "success": True,
-        "labels": historical_labels + future_labels,
-        "historical": [float(v) for v in monthly.values] + [None] * forecast_steps,
-        "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
-    })
-
-
-@app.route("/api/inventory")
 def inventory():
     if "user_id" not in session:
         return jsonify({"success": False}), 401
@@ -733,6 +607,58 @@ def reset_password():
     finally:
         if conn:
             conn.close()
+@app.route("/api/product-intelligence")
+def product_intelligence():
+    if "user_id" not in session:
+        return jsonify({"success": False}), 401
+
+    df = load_user_csv(session["user_id"])
+    df = process_sales_data(df)
+
+    # ---------- PRODUCT LEVEL AGGREGATION ----------
+    product_df = (
+        df.groupby("item_name")
+        .agg(
+            revenue=("sales", "sum"),
+            quantity=("quantity", "sum"),
+            profit=("profit", "sum")
+        )
+        .reset_index()
+    )
+
+    # ---------- ABC ANALYSIS ----------
+    product_df = product_df.sort_values("revenue", ascending=False)
+    total_revenue = product_df["revenue"].sum()
+    product_df["cum_pct"] = product_df["revenue"].cumsum() / total_revenue * 100
+
+    def abc_class(p):
+        if p <= 80:
+            return "A"
+        elif p <= 95:
+            return "B"
+        return "C"
+
+    product_df["abc_class"] = product_df["cum_pct"].apply(abc_class)
+
+    # ---------- PROFIT vs VOLUME ----------
+    avg_profit = product_df["profit"].mean()
+    avg_qty = product_df["quantity"].mean()
+
+    def quadrant(row):
+        if row["profit"] >= avg_profit and row["quantity"] >= avg_qty:
+            return "Star"
+        elif row["profit"] < avg_profit and row["quantity"] >= avg_qty:
+            return "Cash Cow"
+        elif row["profit"] >= avg_profit and row["quantity"] < avg_qty:
+            return "Opportunity"
+        return "Dog"
+
+    product_df["quadrant"] = product_df.apply(quadrant, axis=1)
+
+    return jsonify({
+        "success": True,
+        "products": product_df.to_dict(orient="records")
+    })
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

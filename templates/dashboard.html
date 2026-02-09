@@ -31,10 +31,11 @@
                     <span class="nav-icon">📦</span>
                     <span class="nav-text">Category Analysis</span>
                 </button>
-                <button class="nav-item" onclick="showSection('future')">
-                    <span class="nav-icon">🔮</span>
-                    <span class="nav-text">Future Analytics</span>
+                <button class="nav-item" onclick="showSection('product-intelligence')">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Product Intelligence</span>
                 </button>
+
                 <button class="nav-item" onclick="showSection('datewise')">
                     <span class="nav-icon">📅</span>
                     <span class="nav-text">Date-wise Report</span>
@@ -256,28 +257,59 @@
 
 
                 </section>
+<section id="product-intelligence" class="content-section">
 
-                <!-- SECTION 3: FUTURE ANALYTICS -->
-                <!-- SECTION 3: FUTURE ANALYTICS -->
-<section id="future" class="content-section">
+    <h2 class="section-title">Product Intelligence</h2>
 
-    <!-- 🔮 Forecast KPI Cards -->
-    <div class="kpi-grid" id="aiFutureKpis"></div>
+    <!-- KPIs (values injected dynamically) -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <h4>Class A Products</h4>
+            <p id="kpiA">–</p>
+        </div>
+        <div class="kpi-card">
+            <h4>Class B Products</h4>
+            <p id="kpiB">–</p>
+        </div>
+        <div class="kpi-card">
+            <h4>Class C Products</h4>
+            <p id="kpiC">–</p>
+        </div>
+    </div>
 
-    <!-- 📈 Sales Trend (Vertical Layout) -->
-    <div class="data-card">
-        <div class="card-header">
-            <h3 class="card-title">Historical vs Future Sales</h3>
-            <p class="card-subtitle">Auto-adjusts based on CSV duration</p>
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h3>ABC Inventory Analysis</h3>
+            <canvas id="abcChart"></canvas>
         </div>
 
-        <div class="chart-container large">
-            <canvas id="forecastChart"></canvas>
+        <div class="chart-card">
+            <h3>Profit vs Volume Matrix</h3>
+            <canvas id="profitVolumeChart"></canvas>
         </div>
+    </div>
+
+    <div class="table-card">
+        <h3>Product Classification</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Revenue</th>
+                    <th>Quantity</th>
+                    <th>Profit</th>
+                    <th>ABC Class</th>
+                    <th>Quadrant</th>
+                </tr>
+            </thead>
+            <tbody id="productTable"></tbody>
+        </table>
     </div>
 
 </section>
 
+
+<
 
                 <!-- SECTION 4: DATE-WISE REPORT GENERATION -->
                 <section id="datewise" class="content-section">

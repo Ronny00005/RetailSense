@@ -31,35 +31,21 @@ function showSection(sectionId) {
         .querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`)
         .classList.add("active");
 
-    // Load charts only when needed
-    if (sectionId === "category") {
-        loadCategoryCharts();
-    }
+    
+    
      if (sectionId === "inventory") {
         setTimeout(() => {
             loadInventory();
         }, 200);
     }
 
-if (sectionId === "future") {
-    fetch("/api/forecast-chart")
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) return;
 
-            window.forecastChartData = data;
-            initializeForecastChart();
-        })
-        .catch(err => console.error("Forecast chart error:", err));
-}
-
-    if (sectionId === "future") {
-    // delay needed because section was hidden
-    setTimeout(loadFutureForecast, 150);
-}
 if (sectionId === "category") {
     loadCategoryCharts();
     loadCategoryDropdown();
+}
+if (sectionId === "product-intelligence") {
+    loadProductIntelligence();
 }
 
 }
@@ -86,42 +72,8 @@ function uploadCSV(event) {
         alert("Upload error");
     });
 }
-function initializeForecastChart() {
-    const ctx = document.getElementById('forecastChart');
-    if (!ctx) return;
 
-    if (charts.forecast) {
-        charts.forecast.destroy();
-    }
 
-    charts.forecast = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: forecastChartData.labels,
-            datasets: [
-                {
-                    label: 'Historical Sales',
-                    data: forecastChartData.historical,
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                },
-                {
-                    label: 'Predicted Sales',
-                    data: forecastChartData.predicted,
-                    borderDash: [6, 6],
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-}
 
 function changePassword(event) {
     event.preventDefault();
@@ -350,30 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => chart.resize(), 100);
         });
 });
-function loadFutureForecast() {
-    fetch("/api/future-forecast")
-        .then(res => res.json())
-        .then(data => {
-            if (!data.success) return;
 
-            const container = document.getElementById("aiFutureKpis");
-            container.innerHTML = "";
-
-            data.kpis.forEach(item => {
-                const card = document.createElement("div");
-                card.className = "kpi-card";
-
-                card.innerHTML = `
-                    <div class="kpi-icon gradient">🔮</div>
-                    <div class="kpi-info">
-                        <p class="kpi-label">${item.month}</p>
-                        <h2 class="kpi-value">₹ ${item.value.toLocaleString()}</h2>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        });
-}
 let inventoryChart = null;
 
 function loadInventory() {
@@ -461,6 +390,84 @@ function fetchCategorySummary() {
         document.getElementById("categorySummary").style.display = "grid";
     });
 }
+function loadProductIntelligence() {
+    fetch("/api/product-intelligence")
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) return;
 
+            updateKPIs(data.products);
+            renderABCChart(data.products);
+            renderProfitVolumeChart(data.products);
+            renderProductTable(data.products);
+        });
+}
+function updateKPIs(products) {
+    const counts = {};
 
+    products.forEach(p => {
+        counts[p.abc_class] = (counts[p.abc_class] || 0) + 1;
+    });
 
+    document.getElementById("kpiA").textContent = counts["A"] || 0;
+    document.getElementById("kpiB").textContent = counts["B"] || 0;
+    document.getElementById("kpiC").textContent = counts["C"] || 0;
+}
+function renderABCChart(products) {
+    const classCounts = {};
+
+    products.forEach(p => {
+        classCounts[p.abc_class] = (classCounts[p.abc_class] || 0) + 1;
+    });
+
+    new Chart(document.getElementById("abcChart"), {
+        type: "bar",
+        data: {
+            labels: Object.keys(classCounts),
+            datasets: [{
+                data: Object.values(classCounts)
+            }]
+        }
+    });
+}
+function renderProfitVolumeChart(products) {
+    const grouped = {};
+
+    products.forEach(p => {
+        if (!grouped[p.quadrant]) grouped[p.quadrant] = [];
+        grouped[p.quadrant].push({ x: p.quantity, y: p.profit });
+    });
+
+    new Chart(document.getElementById("profitVolumeChart"), {
+        type: "scatter",
+        data: {
+            datasets: Object.keys(grouped).map(q => ({
+                label: q,
+                data: grouped[q]
+            }))
+        },
+        options: {
+            scales: {
+                x: { title: { display: true, text: "Quantity Sold" } },
+                y: { title: { display: true, text: "Profit" } }
+            }
+        }
+    });
+}
+function renderProductTable(products) {
+    const tbody = document.getElementById("productTable");
+    tbody.innerHTML = "";
+
+    products.forEach(p => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${p.item_name}</td>
+                <td>${Number(p.revenue || 0).toLocaleString()}</td>
+                <td>${p.quantity}</td>
+                <td>${Number(p.profit || 0).toLocaleString()}</td>
+                <td>${p.abc_class}</td>
+                <td>${p.quadrant}</td>
+            </tr>
+        `;
+    });
+}
