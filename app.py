@@ -566,6 +566,7 @@ def forecast_chart():
         "historical": [float(v) for v in monthly.values] + [None] * forecast_steps,
         "predicted": [None] * len(monthly.values) + [float(v) for v in forecast_values]
     })
+
 @app.route("/api/inventory")
 def inventory():
     if "user_id" not in session:
@@ -578,33 +579,40 @@ def inventory():
     df = process_sales_data(df)
 
     if "stock_left" not in df.columns or "quantity" not in df.columns:
-        return jsonify({"success": True, "current_stock": 0, "days_of_stock_left": 0, "action": "No Data"})
-
-    current_stock = int(df["stock_left"].sum())
-    total_quantity = df["quantity"].sum()
-
-    if total_quantity <= 0:
         return jsonify({
             "success": True,
-            "current_stock": current_stock,
-            "days_of_stock_left": 0,
-            "action": "No Sales Data"
+            "forecast": 0,
+            "current_stock": 0,
+            "action": "No Data"
         })
 
+    # ---------- CURRENT STOCK ----------
+    current_stock = int(df["stock_left"].sum())
+
+    # ---------- FORECAST DEMAND (last 3 months avg) ----------
+    monthly_demand = (
+        df.set_index("date")
+        .resample("ME")["quantity"]
+        .sum()
+    )
+
+    forecast_demand = int(monthly_demand.tail(3).mean()) if len(monthly_demand) else 0
     total_days = max((df["date"].max() - df["date"].min()).days, 1)
     avg_daily_sales = total_quantity / total_days
     days_left = round(current_stock / avg_daily_sales, 1)
 
-    action = (
-        "Urgent Reorder" if days_left < 10 else
-        "Reorder Soon" if days_left < 20 else
-        "Stock Sufficient"
-    )
+    # ---------- ACTION ----------
+    if days_left < 10:
+        action = " Urgent Reorder Required"
+    elif days_left <20:
+        action = "Reorder Soon"
+    else:
+        action = "Stock Sufficient"
 
     return jsonify({
         "success": True,
+        "forecast": forecast_demand,   # ✅ THIS FIXES JS
         "current_stock": current_stock,
-        "days_of_stock_left": days_left,
         "action": action
     })
 
