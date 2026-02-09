@@ -459,41 +459,54 @@ def future_forecast():
         df = load_user_csv(session["user_id"])
         df = process_sales_data(df)
 
-        
         if "sales" not in df.columns:
             return jsonify({
                 "success": False,
                 "message": "Sales column missing in CSV"
             })
 
-        monthly_sales = (
+        # ---------------- DAILY SALES ----------------
+        daily_sales = (
             df.set_index("date")
-            .resample("ME")["sales"]
+            .resample("D")["sales"]
             .sum()
         )
 
-        if len(monthly_sales) < 6:
+        # Limit to last 365 days for performance
+        daily_sales = daily_sales.tail(365)
+
+        if len(daily_sales) < 60:
             return jsonify({
                 "success": False,
                 "message": "Not enough data for forecast"
             })
 
+        # ---------------- SARIMAX (WEEKLY SEASONALITY) ----------------
         model = SARIMAX(
-            monthly_sales,
+            daily_sales,
             order=(1, 1, 1),
-            seasonal_order=(1, 1, 1, 12),
+            seasonal_order=(1, 1, 1, 7),  # ✅ weekly pattern
             enforce_stationarity=False,
             enforce_invertibility=False
         )
 
         results = model.fit(disp=False)
 
-        forecast = results.get_forecast(steps=12)
-        forecast_values = forecast.predicted_mean.fillna(monthly_sales.mean())
+        # ---------------- FORECAST NEXT 365 DAYS ----------------
+        forecast_days = 365
+        forecast = results.get_forecast(steps=forecast_days)
+        daily_forecast = forecast.predicted_mean.clip(lower=0)
+
+        # ---------------- CONVERT DAILY → MONTHLY ----------------
+        monthly_forecast = (
+            daily_forecast
+            .resample("ME")
+            .sum()
+            .head(12)   # next 12 months
+        )
 
         future_months = [
-            (monthly_sales.index[-1] + pd.DateOffset(months=i + 1)).strftime("%b %Y")
-            for i in range(12)
+            d.strftime("%b %Y") for d in monthly_forecast.index
         ]
 
         return jsonify({
@@ -501,21 +514,18 @@ def future_forecast():
             "kpis": [
                 {
                     "month": future_months[i],
-                    "value": round(float(forecast_values.iloc[i]), 2)
+                    "value": round(float(monthly_forecast.iloc[i]), 2)
                 }
-                for i in range(12)
+                for i in range(len(monthly_forecast))
             ]
         })
 
     except Exception as e:
-        
         print("FUTURE FORECAST ERROR:", e)
-
         return jsonify({
             "success": False,
             "message": "Forecast calculation failed"
         })
-
 
 
 @app.route("/api/forecast-chart")
