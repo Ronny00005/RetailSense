@@ -253,32 +253,29 @@
             }
 
             const payload = { email, password };
+            fetch("/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        email,
+        password
+    })
+})
+.then(res => res.json())
+.then(data => {
+    if (!data.success) {
+        alert("Invalid credentials");
+        return;
+    }
 
-            try {
-                const res = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+    // ✅ IMPORTANT FIX
+    if (data.csv_uploaded) {
+        window.location.href = "/dashboard";
+    } else {
+        window.location.href = "/upload";
+    }
+});
 
-                const data = await res.json();
-
-                if (!data.success) {
-                    alert('Invalid credentials');
-                    return;
-                }
-
-                sessionStorage.setItem('user_id', data.user_id);
-                sessionStorage.setItem('user_name', data.name);
-                if (data.csv_uploaded) {
-    window.location.href = "/dashboard";
-} else {
-    window.location.href = "/upload";
-}
-
-            } catch (error) {
-                alert('Login failed. Please try again.');
-            }
         }
 
        

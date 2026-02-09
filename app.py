@@ -236,78 +236,47 @@ def dashboard():
     if "user_id" not in session:
         return redirect(url_for("index"))
 
-    # ---------------- LOAD CSV ----------------
-    df = load_user_csv(session["user_id"])
-    if df is None:
+    # ✅ Check DB first
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT csv_uploaded, csv_path FROM users WHERE id = %s",
+        (session["user_id"],)
+    )
+    csv_uploaded, csv_path = cur.fetchone()
+    conn.close()
+
+    # ❌ Never uploaded
+    if not csv_uploaded:
         return redirect(url_for("upload"))
 
+    # ❌ File missing (Render restart case)
+    if not csv_path or not os.path.exists(csv_path):
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute(
+            "UPDATE users SET csv_uploaded = FALSE WHERE id = %s",
+            (session["user_id"],)
+        )
+        conn.commit()
+        conn.close()
+        return redirect(url_for("upload"))
+
+    # ✅ Safe to load CSV
+    df = pd.read_csv(csv_path)
     df = process_sales_data(df)
 
-    # ---------------- OVERALL KPIs ----------------
+    # -------- KPIs --------
     total_sales = round(df["sales"].sum(), 2)
     net_profit = round(df["profit"].sum(), 2)
     avg_profit = round(df["profit"].mean(), 2)
 
-    top_item = (
-        df.groupby("item_name")["quantity"]
-        .sum()
-        .idxmax()
-    )
+    top_item = df.groupby("item_name")["quantity"].sum().idxmax()
 
-    # ---------------- TOP 5 ITEMS ----------------
-    top_5_df = (
-        df.groupby("item_name")
-        .agg(
-            units_sold=("quantity", "sum"),
-            revenue=("sales", "sum")
-        )
-        .sort_values("units_sold", ascending=False)
-        .head(5)
-        .reset_index()
-    )
-
-    top_5_items = [
-        {
-            "name": row["item_name"],
-            "units_sold": int(row["units_sold"]),
-            "revenue": round(row["revenue"], 2)
-        }
-        for _, row in top_5_df.iterrows()
-    ]
-
-    # ---------------- CATEGORY ANALYSIS ----------------
-    category_sales = (
-        df.groupby("category")["sales"]
-        .sum()
-        .sort_values(ascending=False)
-    )
-
-    total_category_sales = category_sales.sum()
-
-    top_3_categories = [
-        {
-            "name": cat,
-            "revenue": round(val, 2),
-            "percentage": round((val / total_category_sales) * 100, 2)
-        }
-        for cat, val in category_sales.head(3).items()
-    ]
-
-    bottom_3_categories = [
-        {
-            "name": cat,
-            "revenue": round(val, 2),
-            "percentage": round((val / total_category_sales) * 100, 2)
-        }
-        for cat, val in category_sales.tail(3).items()
-    ]
-# ---------------- USER INFO ----------------
+    # -------- USER INFO --------
     conn = get_db()
     cur = conn.cursor()
-    cur.execute(
-        "SELECT email FROM users WHERE id = %s",
-        (session["user_id"],)
-    )
+    cur.execute("SELECT email FROM users WHERE id = %s", (session["user_id"],))
     user_email = cur.fetchone()[0]
     conn.close()
 
@@ -316,17 +285,12 @@ def dashboard():
         user_name=session["user_name"],
         user_email=user_email,
         user_role="Retail Analyst",
-
         total_sales=total_sales,
         net_profit=net_profit,
         avg_profit=avg_profit,
-        top_item=top_item,
-
-        top_5_items=top_5_items,
-        top_3_categories=top_3_categories,
-        bottom_3_categories=bottom_3_categories,
-    
+        top_item=top_item
     )
+
 @app.route("/api/datewise-report", methods=["POST"])
 def datewise_report():
     if "user_id" not in session:
@@ -452,7 +416,7 @@ def handle_exception(e):
     return jsonify({"error": str(e)}), 500
 
 
-
+@app.route("/api/inventory")
 def inventory():
     if "user_id" not in session:
         return jsonify({"success": False}), 401
