@@ -435,7 +435,11 @@ function renderProfitVolumeChart(products) {
 
     products.forEach(p => {
         if (!grouped[p.quadrant]) grouped[p.quadrant] = [];
-        grouped[p.quadrant].push({ x: p.quantity, y: p.profit });
+        grouped[p.quadrant].push({
+            x: p.quantity,
+            y: p.profit,
+            label: p.item_name   // 👈 attach product name
+        });
     });
 
     new Chart(document.getElementById("profitVolumeChart"), {
@@ -447,25 +451,44 @@ function renderProfitVolumeChart(products) {
             }))
         },
         options: {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(ctx) {
+                            const p = ctx.raw;
+                            return `${p.label} | Qty: ${p.x}, Profit: ${p.y.toLocaleString()}`;
+                        }
+                    }
+                }
+            },
             scales: {
-                x: { title: { display: true, text: "Quantity Sold" } },
-                y: { title: { display: true, text: "Profit" } }
+                x: {
+                    title: { display: true, text: "Quantity Sold" }
+                },
+                y: {
+                    title: { display: true, text: "Total Profit" }
+                }
             }
         }
     });
 }
+
 function renderProductTable(products) {
     const tbody = document.getElementById("productTable");
     tbody.innerHTML = "";
 
     products.forEach(p => {
+        const badgeClass =
+            p.abc_class === "A" ? "badge-a" :
+            p.abc_class === "B" ? "badge-b" : "badge-c";
+
         tbody.innerHTML += `
             <tr>
-                <td>${p.item_name}</td>
-                <td>${Number(p.revenue || 0).toLocaleString()}</td>
+                <td><strong>${p.item_name}</strong></td>
+                <td>${Number(p.revenue).toLocaleString()}</td>
                 <td>${p.quantity}</td>
-                <td>${Number(p.profit || 0).toLocaleString()}</td>
-                <td>${p.abc_class}</td>
+                <td>${Number(p.profit).toLocaleString()}</td>
+                <td><span class="badge ${badgeClass}">${p.abc_class}</span></td>
                 <td>${p.quadrant}</td>
             </tr>
         `;

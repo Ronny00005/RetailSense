@@ -212,7 +212,7 @@
             }, 400);
         }
 
-        // Password Strength Meter
+        
         const passwordInput = document.getElementById('signupPassword');
         const strengthBar = document.querySelector('.strength-bar');
         const strengthText = document.querySelector('.strength-text');
@@ -242,7 +242,7 @@
             });
         }
 
-        // Login Handler
+        
         async function loginUser() {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -290,42 +290,39 @@ async function signupUser() {
     const password = document.getElementById('signupPassword').value;
     const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
-    // Regex patterns
     const nameRegex = /^[A-Za-z\s]{2,}$/;         
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const mobileRegex = /^\d{10}$/;                
 
-    // Empty check
+    
     if (!name || !email || !mobile || !password || !confirmPassword) {
         alert("All fields are required");
         return;
     }
 
-    // Name validation
+    
     if (!nameRegex.test(name)) {
         alert("Name must be at least 2 characters and contain no numbers");
         return;
     }
 
-    // Email validation
     if (!emailRegex.test(email)) {
         alert("Please enter a valid email address");
         return;
     }
 
-    // Mobile validation
+    
     if (!mobileRegex.test(mobile)) {
         alert("Mobile number must be exactly 10 digits");
         return;
     }
 
-    // Password length validation
+    
     if (password.length < 8) {
         alert("Password must be at least 8 characters long");
         return;
     }
 
-    // Confirm password
     if (password !== confirmPassword) {
         alert("Passwords do not match");
         return;
