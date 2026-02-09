@@ -572,45 +572,39 @@ def inventory():
         return jsonify({"success": False}), 401
 
     df = load_user_csv(session["user_id"])
+    if df is None:
+        return jsonify({"success": False})
+
     df = process_sales_data(df)
 
-    if "stock_left" not in df.columns:
-        return jsonify({
-            "success": False,
-            "message": "Stock data not found in CSV"
-        })
+    if "stock_left" not in df.columns or "quantity" not in df.columns:
+        return jsonify({"success": True, "current_stock": 0, "days_of_stock_left": 0, "action": "No Data"})
 
-    # ---------------- CURRENT STOCK ----------------
     current_stock = int(df["stock_left"].sum())
-
-    # ---------------- DATE RANGE ----------------
-    total_days = (df["date"].max() - df["date"].min()).days
-    total_days = max(total_days, 1)
-
-    # ---------------- DAILY SALES RATE ----------------
     total_quantity = df["quantity"].sum()
 
     if total_quantity <= 0:
-        avg_daily_sales = 0
-        days_of_stock = float("inf")
-        action = "No Sales Data"
-    else:
-        avg_daily_sales = total_quantity / total_days
-        days_of_stock = round(current_stock / avg_daily_sales, 1)
+        return jsonify({
+            "success": True,
+            "current_stock": current_stock,
+            "days_of_stock_left": 0,
+            "action": "No Sales Data"
+        })
 
-        # ---------------- SMART ACTION LOGIC ----------------
-        if days_of_stock < 10:
-            action = "Urgent Reorder"
-        elif days_of_stock < 20:
-            action = "Reorder Soon"
-        else:
-            action = "Stock Sufficient"
+    total_days = max((df["date"].max() - df["date"].min()).days, 1)
+    avg_daily_sales = total_quantity / total_days
+    days_left = round(current_stock / avg_daily_sales, 1)
+
+    action = (
+        "Urgent Reorder" if days_left < 10 else
+        "Reorder Soon" if days_left < 20 else
+        "Stock Sufficient"
+    )
 
     return jsonify({
         "success": True,
         "current_stock": current_stock,
-        "avg_daily_sales": round(avg_daily_sales, 2),
-        "days_of_stock_left": None if days_of_stock == float("inf") else days_of_stock,
+        "days_of_stock_left": days_left,
         "action": action
     })
 
