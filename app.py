@@ -327,15 +327,22 @@ def dashboard():
     conn.close()
 
     return render_template(
-        "dashboard.html",
-        user_name=session["user_name"],
-        user_email=user_email,
-        user_role="Retail Analyst",
-        total_sales=total_sales,
-        net_profit=net_profit,
-        avg_profit=avg_profit,
-        top_item=top_item
-    )
+    "dashboard.html",
+    user_name=session["user_name"],
+    user_email=user_email,
+    user_role="Retail Analyst",
+
+    total_sales=total_sales,
+    net_profit=net_profit,
+    avg_profit=avg_profit,
+    top_item=top_item,
+
+    # 🔥 THESE 3 WERE MISSING
+    top_5_items=top_5_items,
+    top_3_categories=top_3_categories,
+    bottom_3_categories=bottom_3_categories
+)
+
 
 @app.route("/api/datewise-report", methods=["POST"])
 def datewise_report():
