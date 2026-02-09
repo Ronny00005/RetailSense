@@ -281,50 +281,86 @@
             }
         }
 
-        async function signupUser() {
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const mobile = document.getElementById('signupMobile').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+       
+        
+async function signupUser() {
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const mobile = document.getElementById('signupMobile').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
-            if (!name || !email || !mobile || !password || !confirmPassword) {
-                alert('Please fill in all fields');
-                return;
-            }
+    // Regex patterns
+    const nameRegex = /^[A-Za-z\s]{2,}$/;         
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const mobileRegex = /^\d{10}$/;                s
 
-            if (password !== confirmPassword) {
-                alert('Passwords do not match');
-                return;
-            }
+    // Empty check
+    if (!name || !email || !mobile || !password || !confirmPassword) {
+        alert("All fields are required");
+        return;
+    }
 
-            const payload = {
-                full_name: name,
-                email: email,
-                mobile: mobile,
-                password: password
-            };
+    // Name validation
+    if (!nameRegex.test(name)) {
+        alert("Name must be at least 2 characters and contain no numbers");
+        return;
+    }
 
-            try {
-                const res = await fetch('/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+    // Email validation
+    if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address");
+        return;
+    }
 
-                const data = await res.json();
+    // Mobile validation
+    if (!mobileRegex.test(mobile)) {
+        alert("Mobile number must be exactly 10 digits");
+        return;
+    }
 
-                if (!data.success) {
-                    alert(data.message || 'Signup failed');
-                    return;
-                }
+    // Password length validation
+    if (password.length < 8) {
+        alert("Password must be at least 8 characters long");
+        return;
+    }
 
-                alert('Account created successfully!');
-                showLogin();
-            } catch (error) {
-                alert('Signup failed. Please try again.');
-            }
+    // Confirm password
+    if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+    }
+
+    const payload = {
+        full_name: name,
+        email: email,
+        mobile: mobile,
+        password: password
+    };
+
+    try {
+        const res = await fetch('/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+            alert(data.message || "Signup failed");
+            return;
         }
+
+        alert("Account created successfully!");
+        showLogin();
+
+    } catch (error) {
+        alert("Signup failed. Please try again.");
+    }
+}
+
+
     </script>
 </body>
 </html>

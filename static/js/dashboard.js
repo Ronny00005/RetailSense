@@ -393,32 +393,25 @@ function loadFutureForecast() {
     fetch("/api/future-forecast")
         .then(res => res.json())
         .then(data => {
-            console.log("Future forecast:", data); // DEBUG
-
             if (!data.success) return;
 
             const container = document.getElementById("aiFutureKpis");
             container.innerHTML = "";
 
-            const colors = ["blue", "orange", "yellow", "gradient"];
-
-            data.kpis.forEach((item, index) => {
-                const color = colors[index % colors.length];
-
+            data.kpis.forEach(item => {
                 const card = document.createElement("div");
                 card.className = "kpi-card";
 
                 card.innerHTML = `
-                    <div class="kpi-icon ${color}">🔮</div>
+                    <div class="kpi-icon gradient">🔮</div>
                     <div class="kpi-info">
-                        <p class="kpi-label">${item.month} Forecast</p>
+                        <p class="kpi-label">${item.month}</p>
                         <h2 class="kpi-value">₹ ${item.value.toLocaleString()}</h2>
                     </div>
                 `;
-
                 container.appendChild(card);
             });
-        })
-        .catch(err => console.error("Future forecast error:", err));
+        });
 }
+
 
