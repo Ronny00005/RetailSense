@@ -427,6 +427,14 @@ def monthly_sales():
 def download_excel():
     if "user_id" not in session:
         return jsonify({"success": False}), 401
+    df = load_user_csv(session["user_id"])
+    if df is None:
+        return jsonify({
+            "success": False,
+            "message": "CSV not found. Please upload again."
+        }), 400
+
+    df = process_sales_data(df)
 
     data = request.get_json()
     from_date = data.get("from_date")
@@ -444,6 +452,12 @@ def download_excel():
         return jsonify({"success": False, "message": "No data available"}), 400
 
     output = io.BytesIO()
+    if len(filtered_df) > 50000:
+        return jsonify({
+            "success": False,
+            "message": "Too much data to export. Please narrow date range."
+        }), 400
+
     filtered_df.to_excel(output, index=False)
     output.seek(0)
 
@@ -454,10 +468,10 @@ def download_excel():
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 
-@app.errorhandler(Exception)
-def handle_exception(e):
-    print("UNHANDLED ERROR:", e)
-    return jsonify({"error": str(e)}), 500
+# @app.errorhandler(Exception)
+# def handle_exception(e):
+#     print("UNHANDLED ERROR:", e)
+#     return jsonify({"error": str(e)}), 500
 
 
 @app.route("/api/inventory")
