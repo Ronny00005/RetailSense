@@ -1,5 +1,8 @@
 
 let charts = {};
+setInterval(() => {
+    fetch("/api/inventory").catch(() => {});
+},40 * 1000); // every 5 minutes
 
 
 document.addEventListener('DOMContentLoaded', () => {
