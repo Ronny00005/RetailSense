@@ -1,15 +1,10 @@
-/* ============================================
-   UPLOAD PAGE STYLES
-   ============================================ */
+
 
 .page-content {
     min-height: calc(100vh - 80px);
     padding: var(--spacing-xl) 0;
 }
 
-/* ============================================
-   USER WELCOME & LOGOUT
-   ============================================ */
 
 .user-welcome {
     color: #475569;
@@ -48,9 +43,6 @@ body.light-mode .user-welcome {
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
-/* ============================================
-   BACK NAVIGATION
-   ============================================ */
 
 .back-navigation {
     margin-bottom: var(--spacing-lg);
@@ -100,9 +92,6 @@ body.light-mode .btn-back:hover {
     transform: translateX(-4px);
 }
 
-/* ============================================
-   UPLOAD CONTAINER
-   ============================================ */
 
 .upload-container {
     max-width: 900px;
@@ -155,9 +144,6 @@ body.light-mode .upload-subtitle {
     color: #475569;
 }
 
-/* ============================================
-   UPLOAD AREA
-   ============================================ */
 
 .upload-area {
     background: #FFFFFF;
@@ -243,9 +229,6 @@ body.light-mode .upload-text {
     margin-bottom: 0;
 }
 
-/* ============================================
-   FILE PREVIEW
-   ============================================ */
 
 .file-preview {
     text-align: center;
@@ -319,9 +302,6 @@ body.light-mode .file-size {
     transform: rotate(90deg) scale(1.1);
 }
 
-/* ============================================
-   UPLOAD PROGRESS
-   ============================================ */
 
 .upload-progress {
     margin-bottom: var(--spacing-lg);
@@ -386,10 +366,6 @@ body.light-mode .file-size {
 .btn-upload:hover .btn-arrow {
     transform: translateX(4px);
 }
-
-/* ============================================
-   FORMAT GUIDE
-   ============================================ */
 
 .format-guide {
     background: #FFFFFF;
@@ -611,9 +587,7 @@ body.light-mode .feature-item p {
     color: #475569;
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
+
 
 @media (max-width: 768px) {
     .user-welcome {

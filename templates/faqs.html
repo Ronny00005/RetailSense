@@ -24,11 +24,9 @@
         </div>
     </div>
 </nav>
-
-    <!-- Page Content -->
     <div class="page-content">
         <div class="container">
-            <!-- Hero Section -->
+        
             <div class="faq-hero">
                 <div class="hero-badge">Support Center</div>
                 <h1 class="page-title">Frequently Asked Questions</h1>
@@ -37,9 +35,9 @@
                 </p>
             </div>
 
-            <!-- FAQ Sections -->
+            
             <div class="faq-container">
-                <!-- General -->
+            
                 <div class="faq-section">
                     <h2 class="faq-category">
                         <span class="category-icon">ℹ️</span>
@@ -61,7 +59,7 @@
                         </div>
                     </div>
 
-                    <div class="faq-item">
+                    
                         <button class="faq-question" onclick="toggleFaq(this)">
                             <span>Who can use Retail Sense?</span>
                             <span class="faq-arrow">+</span>
@@ -76,7 +74,7 @@
                     </div>
                 </div>
 
-                <!-- CSV & Data -->
+                
                 <div class="faq-section">
                     <h2 class="faq-category">
                         <span class="category-icon">📄</span>
@@ -125,7 +123,7 @@
                     </div>
                 </div>
 
-                <!-- Analytics & Prediction -->
+               
                 <div class="faq-section">
                     <h2 class="faq-category">
                         <span class="category-icon">📊</span>
@@ -148,14 +146,18 @@
 
                     <div class="faq-item">
                         <button class="faq-question" onclick="toggleFaq(this)">
-                            <span>Is machine learning used for predictions?</span>
+                            <span>What is Product Intelligence</span>
                             <span class="faq-arrow">+</span>
                         </button>
                         <div class="faq-answer">
                             <p>
-                                No. Predictions are logic-based and rule-driven, making them transparent, 
-                                fast, and easy to understand. This approach works well for most retail 
-                                scenarios without requiring complex ML models.
+                               <h1> ABC Inventory Analysis</h1>
+
+<p>Classifies your inventory into three categories (A, B, and C) based on revenue importance, helping you prioritize high-value items and optimize stock levels</p>
+
+                <h1>Profit vs. Volume Matrix</h1>
+
+<p>"Visualizes your product performance by plotting sales volume against profit margins, instantly identifying your star performers, traffic drivers, and low-value items."</p>
                             </p>
                         </div>
                     </div>
@@ -177,7 +179,7 @@
 
                
 
-            <!-- Still Have Questions -->
+            
             <div class="contact-section">
                 <div class="contact-card">
                     <h3>Still have questions?</h3>
@@ -191,23 +193,17 @@
     </div>
 
     <script>
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.querySelector('.theme-icon');
-            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        }
+       
 
         function toggleFaq(button) {
             const faqItem = button.parentElement;
             const isOpen = faqItem.classList.contains('active');
             
-            // Close all other FAQs
             document.querySelectorAll('.faq-item').forEach(item => {
                 item.classList.remove('active');
                 item.querySelector('.faq-arrow').textContent = '+';
             });
             
-            // Toggle current FAQ
             if (!isOpen) {
                 faqItem.classList.add('active');
                 button.querySelector('.faq-arrow').textContent = '−';

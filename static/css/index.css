@@ -1,6 +1,4 @@
-/* ============================================
-   INDEX PAGE - LOGIN & SIGNUP
-   ============================================ */
+
 
 .hero-section {
     min-height: calc(100vh - 80px);
@@ -52,9 +50,6 @@ body.light-mode .auth-container {
     border-color: #E0F2FE;
 }
 
-/* ============================================
-   AUTH FORMS
-   ============================================ */
 
 .auth-forms {
     display: flex;
@@ -124,9 +119,6 @@ body.light-mode .signup-scroll::-webkit-scrollbar-thumb {
     background: #2563EB;
 }
 
-/* ============================================
-   FORM INPUTS
-   ============================================ */
 
 .input-wrapper {
     display: flex;
@@ -201,9 +193,6 @@ body.light-mode .form-input:focus {
     transform: scale(1.1);
 }
 
-/* ============================================
-   PASSWORD STRENGTH METER
-   ============================================ */
 
 .strength-meter {
     height: 4px;
@@ -227,11 +216,6 @@ body.light-mode .form-input:focus {
     margin-top: 0.25rem;
     margin-bottom: 0;
 }
-
-/* ============================================
-   BUTTONS
-   ============================================ */
-
 .btn-primary {
     width: 100%;
     padding: 1rem 2rem;
@@ -296,9 +280,6 @@ body.light-mode .switch-text {
     text-decoration-color: #60A5FA;
 }
 
-/* ============================================
-   FEATURE SHOWCASE (CAROUSEL)
-   ============================================ */
 
 .feature-showcase {
     display: flex;
@@ -372,11 +353,6 @@ body.light-mode .feature-showcase {
     background: rgba(255, 255, 255, 0.3);
     opacity: 1;
 }
-
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
-
 @media (max-width: 992px) {
     .auth-container {
         grid-template-columns: 1fr;
@@ -447,7 +423,6 @@ body.light-mode .feature-showcase {
         padding: 0.875rem 1.5rem;
     }
 }
-/* Carousel text fix */
 body.light-mode .carousel-content h3 {
     color: #FFFFFF;
 }

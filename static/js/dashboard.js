@@ -3,7 +3,7 @@ let charts = {};
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize charts if data is available
+    
     if (typeof categoryChartData !== 'undefined') {
         initializeCategoryCharts();
     }
@@ -13,20 +13,20 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showSection(sectionId) {
-    // Hide all sections
+    
     document.querySelectorAll(".content-section").forEach(sec => {
         sec.classList.remove("active");
     });
 
-    // Show selected section
+   
     document.getElementById(sectionId).classList.add("active");
 
-    // Remove active state from all nav buttons
+    
     document.querySelectorAll(".nav-item").forEach(btn => {
         btn.classList.remove("active");
     });
 
-    // Add active class to clicked nav button
+    
     document
         .querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`)
         .classList.add("active");
@@ -102,7 +102,7 @@ function changePassword(event) {
         if (data.success) {
             alert("Password changed successfully");
 
-            // Clear fields
+            
             document.getElementById("currentPassword").value = "";
             document.getElementById("newPassword").value = "";
             document.getElementById("confirmPassword").value = "";
@@ -258,9 +258,6 @@ function renderCategoryPieChart(labels, values) {
         }
     });
 }
-// ============================================
-// RESPONSIVE BEHAVIOR
-// ============================================
 
 window.addEventListener('resize', () => {
     if (window.innerWidth > 1024) {
@@ -298,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            // 🔥 force redraw
+    
             setTimeout(() => chart.resize(), 100);
         });
 });
@@ -438,7 +435,7 @@ function renderProfitVolumeChart(products) {
         grouped[p.quadrant].push({
             x: p.quantity,
             y: p.profit,
-            label: p.item_name   // 👈 attach product name
+            label: p.item_name   
         });
     });
 

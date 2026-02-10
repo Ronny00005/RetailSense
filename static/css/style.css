@@ -1,18 +1,14 @@
-/* ============================================
-   RETAIL SENSE - SHARED STYLES
-   Color Palette: #EFF6FF, #1E3A8A, #3B82F6, #BAE6FD
-   ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 :root {
-    /* Color Palette */
+    
     --color-primary: #1E3A8A;
     --color-secondary: #3B82F6;
     --color-accent: #BAE6FD;
     --color-highlight: #f4db7d;
     
-    /* Extended Palette */
+    
     --color-primary-light: #1E40AF;
     --color-primary-dark: #1E293B;
     --color-secondary-light: #60A5FA;
@@ -22,7 +18,7 @@
     --color-highlight-light: #f7e8a3;
     --color-highlight-dark: #e8ca5d;
     
-    /* Neutrals */
+    
     --color-white: #FFFFFF;
     --color-black: #000000;
     --color-gray-100: #F1F5F9;
@@ -35,22 +31,22 @@
     --color-gray-800: #1E293B;
     --color-gray-900: #0F172A;
     
-    /* Typography */
+    
     --font-primary: 'Outfit', sans-serif;
     --font-display: 'Space Grotesk', sans-serif;
     
-    /* Shadows */
+
     --shadow-sm: 0 2px 4px rgba(30, 58, 138, 0.08);
     --shadow-md: 0 4px 12px rgba(30, 58, 138, 0.12);
     --shadow-lg: 0 8px 24px rgba(30, 58, 138, 0.16);
     --shadow-xl: 0 16px 48px rgba(30, 58, 138, 0.2);
+
     
-    /* Transitions */
     --transition-fast: 0.15s ease;
     --transition-base: 0.3s ease;
     --transition-slow: 0.5s ease;
     
-    /* Spacing */
+
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
@@ -59,7 +55,6 @@
     --spacing-2xl: 4rem;
 }
 
-/* Light Mode Overrides */
 body.light-mode {
     --color-primary: #EFF6FF;
     --color-primary-light: #FFFFFF;
@@ -70,9 +65,7 @@ body.light-mode {
     --color-bg-secondary: #FFFFFF;
 }
 
-/* ============================================
-   RESET & BASE STYLES
-   ============================================ */
+
 
 * {
     margin: 0;
@@ -93,10 +86,6 @@ body {
     overflow-x: hidden;
     transition: background-color var(--transition-base);
 }
-
-/* ============================================
-   TYPOGRAPHY
-   ============================================ */
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
@@ -122,11 +111,6 @@ a {
     color: inherit;
     transition: all var(--transition-base);
 }
-
-/* ============================================
-   NAVIGATION
-   ============================================ */
-
 .custom-navbar {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -252,9 +236,6 @@ body.light-mode .theme-toggle:hover {
     border-color: #60A5FA;
 }
 
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
 
 .hidden {
     display: none !important;
@@ -265,10 +246,6 @@ body.light-mode .theme-toggle:hover {
     margin: 0 auto;
     padding: 0 var(--spacing-md);
 }
-
-/* ============================================
-   ANIMATIONS
-   ============================================ */
 
 @keyframes slideIn {
     from {
@@ -314,9 +291,6 @@ body.light-mode .theme-toggle:hover {
     }
 }
 
-/* ============================================
-   RESPONSIVE DESIGN
-   ============================================ */
 
 @media (max-width: 768px) {
     .nav-links {
@@ -349,11 +323,7 @@ body.light-mode .theme-toggle:hover {
         font-size: 1.5rem;
     }
 }
-/* =====================================
-   FINAL LIGHT MODE TEXT FIX (SAFE)
-   ===================================== */
 
-/* Gradient text fix */
 body.light-mode .page-title,
 body.light-mode .form-title,
 body.light-mode .section-title {
@@ -362,7 +332,6 @@ body.light-mode .section-title {
     color: #0F172A !important;
 }
 
-/* Headings */
 body.light-mode h1,
 body.light-mode h2,
 body.light-mode h3,
@@ -372,7 +341,7 @@ body.light-mode h6 {
     color: #0F172A;
 }
 
-/* Normal text */
+
 body.light-mode p,
 body.light-mode span,
 body.light-mode li,

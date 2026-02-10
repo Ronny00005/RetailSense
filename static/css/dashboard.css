@@ -8,7 +8,6 @@
     --muted: rgba(15, 23, 42, 0.65);
 }
 
-/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -21,18 +20,12 @@ body {
     color: #0F172A;
 }
 
-/* ==============================
-   LAYOUT
-============================== */
 .dashboard-container {
     display: grid;
     grid-template-columns: 1fr 3fr;
     min-height: 100vh;
 }
 
-/* ==============================
-   SIDEBAR
-============================== */
 .sidebar {
     background: #FFFFFF;
     display: flex;
@@ -98,9 +91,6 @@ body {
     color: #FFFFFF;
 }
 
-/* ==============================
-   MAIN CONTENT
-============================== */
 .main-content {
     padding: 24px 32px;
 }
@@ -135,9 +125,6 @@ body {
     font-weight: 600;
 }
 
-/* ==============================
-   CONTENT SECTIONS
-============================== */
 .content-section {
     display: none;
 }
@@ -146,9 +133,6 @@ body {
     display: block;
 }
 
-/* ==============================
-   KPI CARDS
-============================== */
 .kpi-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -203,9 +187,6 @@ body {
     font-size: 16px;
 }
 
-/* ==============================
-   DATA CARDS
-============================== */
 .data-card {
     background: #FFFFFF;
     border-radius: 18px;
@@ -228,10 +209,6 @@ body {
     opacity: 0.7;
     color: #475569;
 }
-
-/* ==============================
-   TOP ITEMS
-============================== */
 .top-item {
     display: flex;
     align-items: center;
@@ -256,9 +233,6 @@ body {
     color: #0F172A;
 }
 
-/* ==============================
-   CATEGORY
-============================== */
 .category-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -291,10 +265,6 @@ body {
     border-radius: 8px;
     font-size: 11px;
 }
-
-/* ==============================
-   CHARTS
-============================== */
 .charts-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -315,10 +285,6 @@ body {
 .chart-container.large {
     height: 340px;
 }
-
-/* ==============================
-   FORMS
-============================== */
 .form-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -356,10 +322,6 @@ input {
 .btn-primary:hover {
     background: #3B82F6;
 }
-
-/* ==============================
-   PROFILE
-============================== */
 .profile-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -378,9 +340,6 @@ input {
     font-size: 28px;
 }
 
-/* ==============================
-   RESPONSIVE
-============================== */
 @media (max-width: 1100px) {
     .dashboard-container {
         grid-template-columns: 1fr;
@@ -452,4 +411,65 @@ input {
     border-radius: 6px;
     margin-bottom: 15px;
     font-size: 14px;
+}
+.styled-table td:nth-child(1) {
+    font-weight: 600;
+    color: #3B82F6;
+}
+.abc-info-card {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 14px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.abc-info-card h3 {
+    margin-bottom: 8px;
+    color: #1E3A8A;
+}
+
+.abc-desc {
+    color: #475569;
+    margin-bottom: 16px;
+}
+
+.abc-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.abc-type {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 14px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+}
+
+.abc-type.a { border-left: 5px solid #22C55E; }
+.abc-type.b { border-left: 5px solid #F59E0B; }
+.abc-type.c { border-left: 5px solid #EF4444; }
+
+.abc-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+}
+
+.abc-type.a .abc-badge { background: #22C55E; }
+.abc-type.b .abc-badge { background: #F59E0B; }
+.abc-type.c .abc-badge { background: #EF4444; }
+#product-intelligence .kpi-card p {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1E3A8A;
 }

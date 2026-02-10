@@ -1,15 +1,9 @@
-/* ============================================
-   ABOUT PAGE STYLES
-   ============================================ */
+
 
 .page-content {
     min-height: calc(100vh - 80px);
     padding: var(--spacing-xl) 0;
 }
-
-/* ============================================
-   HERO SECTION
-   ============================================ */
 
 .about-hero {
     text-align: center;
@@ -59,9 +53,6 @@ body.light-mode .page-description {
     color: #334155;
 }
 
-/* ============================================
-   PROBLEM & SOLUTION SECTION
-   ============================================ */
 
 .problem-solution-section {
     margin-bottom: var(--spacing-2xl);
@@ -134,10 +125,6 @@ body.light-mode .card-text {
     color: #BAE6FD;
 }
 
-/* ============================================
-   FEATURES SECTION
-   ============================================ */
-
 .features-section {
     margin-bottom: var(--spacing-2xl);
     animation: fadeIn 0.6s ease 0.4s backwards;
@@ -208,10 +195,6 @@ body.light-mode .feature-title {
 body.light-mode .feature-description {
     color: #475569;
 }
-
-/* ============================================
-   HOW IT WORKS SECTION
-   ============================================ */
 
 .how-it-works-section {
     margin-bottom: var(--spacing-2xl);
@@ -296,7 +279,7 @@ body.light-mode .step-content p {
 body.light-mode .workflow-arrow {
     color: #2563EB;
 }
-/* About page card text fix */
+
 body.light-mode .card-title,
 body.light-mode .feature-title,
 body.light-mode .step-content h4 {

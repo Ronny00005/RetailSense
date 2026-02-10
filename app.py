@@ -38,16 +38,19 @@ def load_user_csv(user_id):
     csv_path = result[0]
 
     if not os.path.exists(csv_path):
-        print("CSV FILE NOT FOUND:", csv_path)
         return None
 
-    df = pd.read_csv(csv_path)
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return None
 
     if "date" not in df.columns:
-        raise Exception("CSV must contain a 'date' column")
+        return None
 
-    df["date"] = pd.to_datetime(df["date"])
+    df["date"] = pd.to_datetime(df["date"], errors="coerce")
     return df
+
 
 def process_sales_data(df):
     
@@ -244,17 +247,13 @@ def dashboard():
     if not csv_uploaded:
         return redirect(url_for("upload"))
 
-    # ❌ File missing (Render restart case)
     if not csv_path or not os.path.exists(csv_path):
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute(
-            "UPDATE users SET csv_uploaded = FALSE WHERE id = %s",
-            (session["user_id"],)
+        return render_template(
+            "upload.html",
+            error="CSV file missing. Please re-upload."
         )
-        conn.commit()
-        conn.close()
-        return redirect(url_for("upload"))
+
+    
 
     df = pd.read_csv(csv_path)
     df = process_sales_data(df)
@@ -577,7 +576,7 @@ def category_summary():
     })
 @app.route("/api/change-password", methods=["POST"])
 def change_password():
-    # 1. SECURITY: Ensure user is logged in
+    
     if "user_id" not in session:
         return jsonify({"success": False, "message": "Unauthorized access"}), 401
 

@@ -9,7 +9,7 @@
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Navigation -->
+    
     <nav class="navbar custom-navbar">
     <div class="container d-flex align-items-center">
         <a class="navbar-brand" href="{{ url_for('index') }}">
@@ -25,10 +25,10 @@
     </div>
 </nav>
 
-    <!-- Page Content -->
+    
     <div class="page-content">
         <div class="container">
-            <!-- Hero Section -->
+            
             <div class="about-hero">
                 <div class="hero-badge">About Us</div>
                 <h1 class="page-title">Transform Data Into Insights</h1>
@@ -38,7 +38,7 @@
                 </p>
             </div>
 
-            <!-- Problem & Solution -->
+            
             <div class="problem-solution-section">
                 <div class="row g-4">
                     <div class="col-md-6">
@@ -58,14 +58,14 @@
                             <h3 class="card-title">Our Solution</h3>
                             <p class="card-text">
                                 Retail Sense allows users to upload CSV data and instantly view analytics 
-                                dashboards and predictions in a simple, intuitive UI. No more spreadsheet headaches.
+                                dashboards and Product insights in a simple, intuitive UI. No more spreadsheet headaches.
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Features Section -->
+            
             <div class="features-section">
                 <h2 class="section-title">Key Features</h2>
                 <div class="row g-4">
@@ -108,7 +108,7 @@
                 </div>
             </div>
 
-            <!-- How It Works -->
+        
             <div class="how-it-works-section">
                 <h2 class="section-title">How It Works</h2>
                 <div class="workflow">
@@ -139,20 +139,14 @@
                     <div class="workflow-step">
                         <div class="step-number">4</div>
                         <div class="step-content">
-                            <h4>Future Predictions</h4>
-                            <p>Get forecasts to guide your business decisions</p>
+                            <h4>Product intelligence</h4>
+                            <p>Get your Product insights</p>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
-    <script>
-        function toggleTheme() {
-            document.body.classList.toggle('light-mode');
-            const icon = document.querySelector('.theme-icon');
-            icon.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
-        }
-    </script>
+    
 </body>
 </html>

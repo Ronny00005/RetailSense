@@ -117,24 +117,29 @@
                         </div>
                     </div>
 
-                    <!-- Top 5 Selling Items -->
-                    <div class="data-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Top 5 Selling Items</h3>
-                        </div>
-                        <div class="top-items-list">
-                            {% for item in top_5_items %}
-                            <div class="top-item">
-                                <div class="item-rank">{{ loop.index }}</div>
-                                <div class="item-details">
-                                    <p class="item-name">{{ item.name }}</p>
-                                    <p class="item-meta">{{ item.units_sold }} units sold</p>
-                                </div>
-                                <div class="item-value">{{ item.revenue }}</div>
-                            </div>
-                            {% endfor %}
-                        </div>
+                    <div class="table-wrapper">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Units Sold</th>
+                                    <th>Revenue</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in top_5_items %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td><strong>{{ item.name }}</strong></td>
+                                    <td>{{ item.units_sold }}</td>
+                                    <td>₹ {{ item.revenue }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
+
                     <div class="data-card">
                         <div class="card-header">
                             <h3 class="card-title">Monthly Sales (Yearly)</h3>
@@ -145,10 +150,10 @@
                     </div>
                 </section>
 
-                <!-- SECTION 2: CATEGORY ANALYSIS -->
+                
                 <section id="category" class="content-section">
                     
-                    <!-- Top 3 Highest Categories -->
+                   
                     <div class="data-card">
                         <div class="card-header">
                             <h3 class="card-title">Top 3 Highest Performing Categories</h3>
@@ -165,7 +170,7 @@
                         </div>
                     </div>
 
-                    <!-- Top 3 Lowest Categories -->
+                   
                     <div class="data-card">
                         <div class="card-header">
                             <h3 class="card-title">Top 3 Lowest Performing Categories</h3>
@@ -202,14 +207,14 @@
                             </div>
                         </div>
                     </div>
-                    <!-- CATEGORY DROPDOWN ANALYSIS -->
+                    
 <div class="data-card">
     <div class="card-header">
         <h3 class="card-title">Category-wise Detailed Analysis</h3>
         <p class="card-subtitle">Select a category to view insights</p>
     </div>
 
-    <!-- Dropdown -->
+
     <div class="form-row">
         <div class="form-group">
             <label>Select Category</label>
@@ -219,7 +224,6 @@
         </div>
     </div>
 
-    <!-- Result KPIs -->
     <div class="kpi-grid" id="categorySummary" style="margin-top: 20px; display: none;">
         <div class="kpi-card">
             <div class="kpi-icon blue">💰</div>
@@ -260,20 +264,41 @@
 <section id="product-intelligence" class="content-section">
 
     <h2 class="section-title">Product Intelligence</h2>
-<div class="info-box">
-    <strong>What is ABC Analysis?</strong>
-    <p>
-        ABC Analysis follows the Pareto Principle, where a small number of products
-        contribute to most of the revenue.
+        <div class="abc-info-card">
+    <h3>📦 ABC Analysis Overview</h3>
+    <p class="abc-desc">
+        ABC Analysis is based on the <strong>Pareto Principle (80/20 rule)</strong>.
+        It helps prioritize products based on revenue contribution.
     </p>
-    <ul>
-        <li><strong>Class A:</strong> High-value products (critical items)</li>
-        <li><strong>Class B:</strong> Moderate-value products</li>
-        <li><strong>Class C:</strong> Low-value or slow-moving products</li>
-    </ul>
+
+    <div class="abc-types">
+        <div class="abc-type a">
+            <span class="abc-badge">A</span>
+            <div>
+                <h4>High Value</h4>
+                <p>Top revenue contributors (Critical items)</p>
+            </div>
+        </div>
+
+        <div class="abc-type b">
+            <span class="abc-badge">B</span>
+            <div>
+                <h4>Medium Value</h4>
+                <p>Moderate revenue products</p>
+            </div>
+        </div>
+
+        <div class="abc-type c">
+            <span class="abc-badge">C</span>
+            <div>
+                <h4>Low Value</h4>
+                <p>Low revenue / slow-moving items</p>
+            </div>
+        </div>
+    </div>
 </div>
 
-    <!-- KPIs (values injected dynamically) -->
+
     <div class="kpi-grid">
         <div class="kpi-card">
             <h4>Class A Products</h4>
@@ -331,7 +356,7 @@
 
 
 
-                <!-- SECTION 4: DATE-WISE REPORT GENERATION -->
+                
                 <section id="datewise" class="content-section">
                     
                     <div class="data-card">
@@ -340,7 +365,7 @@
                             <p class="card-subtitle">Select date range to view detailed analytics</p>
                         </div>
 
-                        <!-- Date Selection Form -->
+                        
                         <form id="dateForm" class="date-form" onsubmit="generateReport(event)">
                             <div class="form-row">
                                 <div class="form-group">
@@ -360,10 +385,10 @@
                             </div>
                         </form>
 
-                        <!-- Report Results (Hidden initially) -->
+                     
                         <div id="reportResults" class="report-results hidden">
                             
-                            <!-- KPI Cards for Report -->
+                          
                             <div class="kpi-grid">
                                 <div class="kpi-card">
                                     <div class="kpi-icon blue">💵</div>
