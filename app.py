@@ -218,22 +218,15 @@ def forgot_password():
         plain_text_content=f"Your OTP is {otp}. Valid for 5 minutes."
     )
 
-    # try:
-    #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-    #     sg.send(message)
-    # except Exception as e:
-    #     print("SENDGRID ERROR:", e)
-    #     return jsonify({"success": False, "message": "Failed to send email."}), 500
-
-    # return jsonify({"success": True})
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        response = sg.send(message)
-        print("SENDGRID STATUS:", response.status_code)
-        print("SENDGRID RESPONSE:", response.body)
+        sg.send(message)
     except Exception as e:
-        print("SENDGRID ERROR FULL:", str(e))
-    return jsonify({"success": False, "message": str(e)}), 500
+        print("SENDGRID ERROR:", e)
+        return jsonify({"success": False, "message": "Failed to send email."}), 500
+
+    return jsonify({"success": True})
+    
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
