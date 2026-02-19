@@ -1,19 +1,8 @@
-
-let charts = {};
 setInterval(() => {
     fetch("/api/inventory").catch(() => {});
 },40 * 1000); 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-    if (typeof categoryChartData !== 'undefined') {
-        initializeCategoryCharts();
-    }
-    if (typeof forecastChartData !== 'undefined') {
-        initializeForecastChart();
-    }
-});
 
 function showSection(sectionId) {
     
@@ -493,16 +482,4 @@ function renderProductTable(products) {
             </tr>
         `;
     });
-}
-function getABCClassBadge(cls) {
-    if (cls === "A") return '<span class="badge badge-a">A</span>';
-    if (cls === "B") return '<span class="badge badge-b">B</span>';
-    return '<span class="badge badge-c">C</span>';
-}
-
-function getQuadrantBadge(q) {
-    if (q === "Star") return '<span class="badge" style="background:#3B82F6;color:white;">Star</span>';
-    if (q === "Cash Cow") return '<span class="badge" style="background:#1E3A8A;color:white;">Cow</span>';
-    if (q === "Opportunity") return '<span class="badge" style="background:#BAE6FD;color:#0F172A;">Opportunity</span>';
-    return '<span class="badge" style="background:#EF4444;color:white;">Dog</span>';
 }

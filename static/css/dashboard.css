@@ -990,20 +990,6 @@ input[type="file"]:hover {
 .abc-type.b .abc-badge { background: #F59E0B; }
 .abc-type.c .abc-badge { background: #EF4444; }
 
-/* ═══════════════════════════════════════
-   INFO BOX
-═══════════════════════════════════════ */
-
-.info-box {
-    background: rgba(186, 230, 253, 0.25);
-    border-left: 4px solid #3B82F6;
-    padding: 13px 16px;
-    border-radius: var(--radius-sm);
-    margin-bottom: 16px;
-    font-size: 13.5px;
-    color: rgba(15, 23, 42, 0.75);
-    line-height: 1.6;
-}
 
 /* ═══════════════════════════════════════
    PROFILE SECTION
@@ -1078,15 +1064,6 @@ input[type="file"]:hover {
     gap: 14px;
 }
 
-/* ═══════════════════════════════════════
-   UPLOAD SECTION
-═══════════════════════════════════════ */
-
-.upload-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
 
 /* ═══════════════════════════════════════
    REPORT RESULTS HIDDEN
@@ -1149,14 +1126,7 @@ input[type="file"]:hover {
     .content-header { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
 
-/* ═══════════════════════════════════════
-   UTILITY — keep AI future kpi override
-═══════════════════════════════════════ */
 
-#aiFutureKpis .kpi-card {
-    background: #FFFFFF;
-    border: 1px solid rgba(186, 230, 253, 0.7);
-}
 /* ═══════════════════════════════════════
    PROFIT–VOLUME MATRIX INFO
 ═══════════════════════════════════════ */
