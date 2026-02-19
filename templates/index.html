@@ -53,6 +53,9 @@
                                 </button>
                             </div>
                         </div>
+                        <p class="switch-text">
+                        <span class="link-accent" onclick="showForgot()">Forgot Password?</span>
+                        </p>
 
                         <button type="button" class="btn-primary" onclick="loginUser()">
                             <span>Sign In</span>
@@ -65,7 +68,26 @@
                         </p>
                     </form>
 
-                    
+                    <form id="forgotForm" class="auth-form hidden">
+    <div class="input-wrapper">
+        <label>Email</label>
+        <input type="email" id="forgotEmail" class="form-input">
+    </div>
+
+    <div class="input-wrapper">
+        <label>OTP</label>
+        <input type="text" id="forgotOtp" class="form-input">
+    </div>
+
+    <div class="input-wrapper">
+        <label>New Password</label>
+        <input type="password" id="forgotNewPassword" class="form-input">
+    </div>
+
+    <button type="button" class="btn-primary" onclick="sendOtp()">Send OTP</button>
+    <button type="button" class="btn-primary" onclick="resetPassword()">Reset Password</button>
+</form>
+
                     <form id="signupForm" class="auth-form hidden">
                         <div class="signup-scroll">
                             <div class="input-wrapper">
@@ -194,6 +216,47 @@
                 subtitle.textContent = 'Join us and start analyzing your sales data';
             }, 400);
         }
+        function showForgot(){
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("forgotForm").classList.remove("hidden");
+}
+
+async function sendOtp(){
+    const email = document.getElementById("forgotEmail").value;
+
+    const res = await fetch("/forgot-password",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({email})
+    });
+
+    const data = await res.json();
+    if(data.success){
+        alert("OTP sent to email");
+    }else{
+        alert(data.message);
+    }
+}
+
+async function resetPassword(){
+    const email = document.getElementById("forgotEmail").value;
+    const otp = document.getElementById("forgotOtp").value;
+    const new_password = document.getElementById("forgotNewPassword").value;
+
+    const res = await fetch("/reset-password",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({email, otp, new_password})
+    });
+
+    const data = await res.json();
+    if(data.success){
+        alert("Password reset successful");
+        showLogin();
+    }else{
+        alert(data.message);
+    }
+}
 
         function showLogin() {
             const loginForm = document.getElementById('loginForm');

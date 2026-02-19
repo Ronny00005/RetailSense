@@ -5,12 +5,18 @@ from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
 
 
-
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
 import pandas as pd
+from flask_mail import Mail, Message
+import random
+import datetime
+
+
+mail = Mail(app)
+
 app = Flask(__name__, static_folder="static")  
 
 
@@ -21,6 +27,12 @@ ALLOWED_EXTENSIONS = {"csv"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
+app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+
 @app.route("/favicon.ico")
 def favicon():
     return "", 204
@@ -177,7 +189,37 @@ def login():
         "name": user[1],
         "csv_uploaded": user[5]
     })
+@app.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    data = request.get_json()
+    email = data.get("email")
 
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT id FROM users WHERE email = %s", (email,))
+    user = cur.fetchone()
+    conn.close()
+
+    if not user:
+        return jsonify({"success": False, "message": "Email not registered"})
+
+    otp = str(random.randint(100000, 999999))
+
+    session["reset_email"] = email
+    session["reset_otp"] = otp
+    session["otp_expiry"] = (
+        datetime.datetime.now() + datetime.timedelta(minutes=5)
+    ).isoformat()
+
+    msg = Message(
+        "Retail Sense - Password Reset OTP",
+        sender=app.config["MAIL_USERNAME"],
+        recipients=[email]
+    )
+    msg.body = f"Your OTP is {otp}. Valid for 5 minutes."
+    mail.send(msg)
+
+    return jsonify({"success": True})
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     if "user_id" not in session:
@@ -694,6 +736,46 @@ def product_intelligence():
         "success": True,
         "products": product_df.to_dict(orient="records")
     })
+@app.route("/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json()
+
+    email = data.get("email")
+    otp = data.get("otp")
+    new_password = data.get("new_password")
+
+    if email != session.get("reset_email"):
+        return jsonify({"success": False, "message": "Invalid request"})
+
+    if otp != session.get("reset_otp"):
+        return jsonify({"success": False, "message": "Invalid OTP"})
+
+    expiry = session.get("otp_expiry")
+    if not expiry:
+        return jsonify({"success": False, "message": "OTP expired"})
+
+    if datetime.datetime.now() > datetime.datetime.fromisoformat(expiry):
+        return jsonify({"success": False, "message": "OTP expired"})
+
+    if len(new_password) < 8:
+        return jsonify({"success": False, "message": "Password must be at least 8 characters"})
+
+    new_hash = generate_password_hash(new_password)
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE users SET password = %s WHERE email = %s",
+        (new_hash, email)
+    )
+    conn.commit()
+    conn.close()
+
+    session.pop("reset_email", None)
+    session.pop("reset_otp", None)
+    session.pop("otp_expiry", None)
+
+    return jsonify({"success": True})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
