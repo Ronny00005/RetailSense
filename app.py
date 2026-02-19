@@ -3,7 +3,8 @@ from psycopg2.extras  import RealDictCursor
 import io
 from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
-
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail as SendGridMail
 
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -211,13 +212,22 @@ def forgot_password():
         datetime.datetime.now() + datetime.timedelta(minutes=5)
     ).isoformat()
 
-    msg = Message(
-        "Retail Sense - Password Reset OTP",
-        sender=app.config["MAIL_USERNAME"],
-        recipients=[email]
+    # --- New SendGrid Email Logic ---
+    sender_email = os.environ.get("SENDGRID_SENDER_EMAIL")
+    
+    message = SendGridMail(
+        from_email=sender_email,
+        to_emails=email,
+        subject="Retail Sense - Password Reset OTP",
+        plain_text_content=f"Your OTP is {otp}. Valid for 5 minutes."
     )
-    msg.body = f"Your OTP is {otp}. Valid for 5 minutes."
-    mail.send(msg)
+
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        sg.send(message)
+    except Exception as e:
+        print("SENDGRID ERROR:", e)
+        return jsonify({"success": False, "message": "Failed to send email."}), 500
 
     return jsonify({"success": True})
 @app.route("/upload", methods=["GET", "POST"])
