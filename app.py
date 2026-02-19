@@ -15,10 +15,10 @@ import random
 import datetime
 
 
-mail = Mail(app)
+
 
 app = Flask(__name__, static_folder="static")  
-
+mail = Mail(app)
 
 app.secret_key = "super_secret_key"
 
