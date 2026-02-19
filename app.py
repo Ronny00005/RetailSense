@@ -28,11 +28,7 @@ ALLOWED_EXTENSIONS = {"csv"}
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = os.environ.get("MAIL_USERNAME")
-app.config["MAIL_PASSWORD"] = os.environ.get("MAIL_PASSWORD")
+
 
 @app.route("/favicon.ico")
 def favicon():
@@ -212,7 +208,7 @@ def forgot_password():
         datetime.datetime.now() + datetime.timedelta(minutes=5)
     ).isoformat()
 
-    # --- New SendGrid Email Logic ---
+   
     sender_email = os.environ.get("SENDGRID_SENDER_EMAIL")
     
     message = SendGridMail(
@@ -222,14 +218,23 @@ def forgot_password():
         plain_text_content=f"Your OTP is {otp}. Valid for 5 minutes."
     )
 
+    # try:
+    #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+    #     sg.send(message)
+    # except Exception as e:
+    #     print("SENDGRID ERROR:", e)
+    #     return jsonify({"success": False, "message": "Failed to send email."}), 500
+
+    # return jsonify({"success": True})
     try:
         sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        sg.send(message)
+        response = sg.send(message)
+        print("SENDGRID STATUS:", response.status_code)
+        print("SENDGRID RESPONSE:", response.body)
     except Exception as e:
-        print("SENDGRID ERROR:", e)
-        return jsonify({"success": False, "message": "Failed to send email."}), 500
+        print("SENDGRID ERROR FULL:", str(e))
+    return jsonify({"success": False, "message": str(e)}), 500
 
-    return jsonify({"success": True})
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
     if "user_id" not in session:
