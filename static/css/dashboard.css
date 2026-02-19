@@ -472,9 +472,6 @@ body::before {
     letter-spacing: -0.5px;
 }
 
-/* ═══════════════════════════════════════
-   DATA / CHART CARDS
-═══════════════════════════════════════ */
 
 .data-card {
     background: #FFFFFF;
@@ -566,9 +563,7 @@ body::before {
     height: 360px;
 }
 
-/* ═══════════════════════════════════════
-   TABLES
-═══════════════════════════════════════ */
+
 
 .table-wrapper {
     max-height: 360px;
@@ -1161,4 +1156,113 @@ input[type="file"]:hover {
 #aiFutureKpis .kpi-card {
     background: #FFFFFF;
     border: 1px solid rgba(186, 230, 253, 0.7);
+}
+/* ═══════════════════════════════════════
+   PROFIT–VOLUME MATRIX INFO
+═══════════════════════════════════════ */
+
+.matrix-info-card {
+    background: rgba(239, 246, 255, 0.7);
+    border: 1px solid rgba(186, 230, 253, 0.7);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    margin-bottom: 22px;
+}
+
+.matrix-info-card h3 {
+    color: #1E3A8A;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.matrix-desc {
+    font-size: 13.5px;
+    color: rgba(15, 23, 42, 0.65);
+    margin-bottom: 18px;
+}
+
+.matrix-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.matrix-type {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+    background: #FFFFFF;
+    border: 1px solid rgba(186, 230, 253, 0.5);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.matrix-type:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Color coding aligned with your theme */
+
+.matrix-type.star { border-left: 4px solid #3B82F6; }      /* Blue */
+.matrix-type.cow { border-left: 4px solid #1E3A8A; }       /* Navy */
+.matrix-type.opportunity { border-left: 4px solid #BAE6FD; } /* Light blue */
+.matrix-type.dog { border-left: 4px solid #EF4444; }       /* Red */
+
+.matrix-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    font-family: "Space Mono", monospace;
+}
+
+/* Badge Colors */
+
+.matrix-type.star .matrix-badge {
+    background: #3B82F6;
+}
+
+.matrix-type.cow .matrix-badge {
+    background: #1E3A8A;
+}
+
+.matrix-type.opportunity .matrix-badge {
+    background: #0F172A;
+}
+
+.matrix-type.dog .matrix-badge {
+    background: #EF4444;
+}
+.analysis-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.analysis-column {
+    background: #FFFFFF;
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    border: 1px solid rgba(186, 230, 253, 0.7);
+    box-shadow: var(--shadow-sm);
+}
+
+.analysis-column:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.column-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin-bottom: 16px;
 }

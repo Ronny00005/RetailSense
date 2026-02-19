@@ -297,6 +297,48 @@
         </div>
     </div>
 </div>
+<div class="matrix-info-card">
+    <h3>📊 Profit–Volume Matrix Explanation</h3>
+    <p class="matrix-desc">
+        Products are classified based on <strong>Profit</strong> and <strong>Sales Volume</strong> performance.
+    </p>
+
+    <div class="matrix-types">
+
+        <div class="matrix-type star">
+            <span class="matrix-badge">★</span>
+            <div>
+                <h4>Star</h4>
+                <p>High Profit + High Volume<br>Top performing products</p>
+            </div>
+        </div>
+
+        <div class="matrix-type cow">
+            <span class="matrix-badge">💰</span>
+            <div>
+                <h4>Cash Cow</h4>
+                <p>High Profit + Low Volume<br>Strong margin but limited sales</p>
+            </div>
+        </div>
+
+        <div class="matrix-type opportunity">
+            <span class="matrix-badge">🚀</span>
+            <div>
+                <h4>Opportunity</h4>
+                <p>Low Profit + High Volume<br>Improve pricing or reduce cost</p>
+            </div>
+        </div>
+
+        <div class="matrix-type dog">
+            <span class="matrix-badge">⚠</span>
+            <div>
+                <h4>Dog</h4>
+                <p>Low Profit + Low Volume<br>Consider discontinuing</p>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
     <div class="kpi-grid">
@@ -314,17 +356,20 @@
         </div>
     </div>
 
-    <div class="charts-grid">
-        <div class="chart-card">
-            <h3>ABC Inventory Analysis</h3>
-            <canvas id="abcChart"></canvas>
-        </div>
+    <div class="analysis-columns">
 
-        <div class="chart-card">
-            <h3>Profit vs Volume Matrix</h3>
-            <canvas id="profitVolumeChart"></canvas>
-        </div>
+    <div class="analysis-column">
+        <h3 class="column-title">ABC Inventory Analysis</h3>
+        <canvas id="abcChart"></canvas>
     </div>
+
+    <div class="analysis-column">
+        <h3 class="column-title">Profit vs Volume Matrix</h3>
+        <canvas id="profitVolumeChart"></canvas>
+    </div>
+
+</div>
+
 
     <div class="table-card">
     <div class="card-header">
