@@ -5,35 +5,28 @@ from flask import send_file
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail as SendGridMail
-
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
-
 import pandas as pd
 from flask_mail import Mail, Message
 import random
 import datetime
-
-
-
-
 app = Flask(__name__, static_folder="static")  
 mail = Mail(app)
-
 app.secret_key = "super_secret_key"
-
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"csv"}
-
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-
 @app.route("/favicon.ico")
 def favicon():
     return "", 204
-
+def get_db():
+    db_url = os.environ.get("DATABASE_URL")
+    if not db_url:
+        raise RuntimeError("DATABASE_URL is NOT set")
+    return psycopg2.connect(db_url)
 def load_user_csv(user_id):
     conn = get_db()
     cursor = conn.cursor()
@@ -69,54 +62,24 @@ def process_sales_data(df):
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
 
     if "cost_price" not in df.columns:
-        df["cost_price"] = df["selling_price"] * 0.7  # fallback
+        df["cost_price"] = df["selling_price"] * 0.7  
 
     df["profit"] = (df["selling_price"] - df["cost_price"]) * df["quantity"]
 
     df["sales"] = df["selling_price"] * df["quantity"]
    
     return df
-
-
-
-def get_db():
-    db_url = os.environ.get("DATABASE_URL")
-    if not db_url:
-        raise RuntimeError("DATABASE_URL is NOT set")
-    return psycopg2.connect(db_url)
-
-    
-
-
-
-
-
-
-
-
-
-
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-
 @app.route("/")
 def index():
     return render_template("index.html")
-
 @app.route("/about")
 def about():
     return render_template("about.html")
-
-
 @app.route("/faqs")
 def faqs():
     return render_template("faqs.html")
-
-
-
-
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json(silent=True)
@@ -154,12 +117,6 @@ def signup():
     finally:
         if conn:
             conn.close()
-
-
-
-
-
-
 @app.route("/login", methods=["POST"])
 def login():
     data = request.get_json(silent=True)
@@ -226,7 +183,47 @@ def forgot_password():
         return jsonify({"success": False, "message": "Failed to send email."}), 500
 
     return jsonify({"success": True})
-    
+@app.route("/reset-password", methods=["POST"])
+def reset_password():
+    data = request.get_json()
+
+    email = data.get("email")
+    otp = data.get("otp")
+    new_password = data.get("new_password")
+
+    if email != session.get("reset_email"):
+        return jsonify({"success": False, "message": "Invalid request"})
+
+    if otp != session.get("reset_otp"):
+        return jsonify({"success": False, "message": "Invalid OTP"})
+
+    expiry = session.get("otp_expiry")
+    if not expiry:
+        return jsonify({"success": False, "message": "OTP expired"})
+
+    if datetime.datetime.now() > datetime.datetime.fromisoformat(expiry):
+        return jsonify({"success": False, "message": "OTP expired"})
+
+    if len(new_password) < 8:
+        return jsonify({"success": False, "message": "Password must be at least 8 characters"})
+
+    new_hash = generate_password_hash(new_password)
+
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        "UPDATE users SET password = %s WHERE email = %s",
+        (new_hash, email)
+    )
+    conn.commit()
+    conn.close()
+
+    session.pop("reset_email", None)
+    session.pop("reset_otp", None)
+    session.pop("otp_expiry", None)
+
+    return jsonify({"success": True})
+  
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
@@ -262,22 +259,11 @@ def upload():
     "success": True,
     "redirect": url_for("dashboard")
 })
-
-
-
-
-
-
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("index"))
-
-
-
-
-    
+#Dashboard
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -397,10 +383,7 @@ def datewise_report():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    filtered_df = df[
-        (df["date"] >= from_date) &
-        (df["date"] <= to_date)
-    ]
+    filtered_df = df[(df["date"] >= from_date) &(df["date"] <= to_date)]
 
     if filtered_df.empty:
         return jsonify({
@@ -415,17 +398,9 @@ def datewise_report():
     sales = float(filtered_df["sales"].sum())
     profit = float(filtered_df["profit"].sum())
 
-    top_product = (
-        filtered_df.groupby("item_name")["sales"]
-        .sum()
-        .idxmax()
-    )
+    top_product = (filtered_df.groupby("item_name")["sales"].sum().idxmax())
 
-    worst_product = (
-        filtered_df.groupby("item_name")["sales"]
-        .sum()
-        .idxmin()
-    )
+    worst_product = (filtered_df.groupby("item_name")["sales"].sum().idxmin())
 
     return jsonify({
         "success": True,
@@ -442,11 +417,7 @@ def category_charts():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    category_sales = (
-        df.groupby("category")["sales"]
-        .sum()
-        .sort_values(ascending=False)
-    )
+    category_sales = (df.groupby("category")["sales"].sum().sort_values(ascending=False))
 
     return jsonify({
         "success": True,
@@ -461,11 +432,7 @@ def monthly_sales():
     df = load_user_csv(session["user_id"])
     df = process_sales_data(df)
 
-    monthly = (
-        df.set_index("date")
-        .resample("ME")["sales"]
-        .sum()
-    )
+    monthly = (df.set_index("date") .resample("ME")["sales"] .sum())
 
     return jsonify({
         "success": True,
@@ -490,13 +457,8 @@ def download_excel():
     from_date = data.get("from_date")
     to_date = data.get("to_date")
 
-    df = load_user_csv(session["user_id"])
-    df = process_sales_data(df)
-
-    filtered_df = df[
-        (df["date"] >= from_date) &
-        (df["date"] <= to_date)
-    ]
+    
+    filtered_df = df[(df["date"] >= from_date) &(df["date"] <= to_date)]
 
     if filtered_df.empty:
         return jsonify({"success": False, "message": "No data available"}), 400
@@ -508,7 +470,7 @@ def download_excel():
             "message": "Too much data to export. Please narrow date range."
         }), 400
 
-    filtered_df.to_excel(output, index=False)
+    filtered_df.to_excel(output, index=False,engine="openpyxl")
     output.seek(0)
 
     return send_file(
@@ -517,13 +479,6 @@ def download_excel():
         download_name="datewise_report.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-# @app.errorhandler(Exception)
-# def handle_exception(e):
-#     print("UNHANDLED ERROR:", e)
-#     return jsonify({"error": str(e)}), 500
-
-
 @app.route("/api/inventory")
 def inventory():
     if "user_id" not in session:
@@ -544,17 +499,13 @@ def inventory():
         })
 
     
-    current_stock = int(df["stock_left"].sum())
+    current_stock = (df.sort_values("date").groupby("item_name")["stock_left"].last().sum())
 
    
     total_quantity = df["quantity"].sum()
 
     
-    monthly_demand = (
-        df.set_index("date")
-        .resample("ME")["quantity"]
-        .sum()
-    )
+    monthly_demand = ( df.set_index("date").resample("ME")["quantity"].sum())
     forecast_demand = int(monthly_demand.tail(3).mean()) if len(monthly_demand) else 0
 
     
@@ -619,17 +570,9 @@ def category_summary():
     total_sales = float(cat_df["sales"].sum())
     total_profit = float(cat_df["profit"].sum())
 
-    best_item = (
-        cat_df.groupby("item_name")["quantity"]
-        .sum()
-        .idxmax()
-    )
+    best_item = (cat_df.groupby("item_name")["quantity"].sum().idxmax())
 
-    worst_item = (
-        cat_df.groupby("item_name")["quantity"]
-        .sum()
-        .idxmin()
-    )
+    worst_item = (cat_df.groupby("item_name")["quantity"].sum().idxmin() )
 
     return jsonify({
         "success": True,
@@ -702,14 +645,7 @@ def product_intelligence():
 
     
     product_df = (
-        df.groupby("item_name")
-        .agg(
-            revenue=("sales", "sum"),
-            quantity=("quantity", "sum"),
-            profit=("profit", "sum")
-        )
-        .reset_index()
-    )
+        df.groupby("item_name").agg( revenue=("sales", "sum"), quantity=("quantity", "sum"),profit=("profit", "sum") ).reset_index())
 
     
     product_df = product_df.sort_values("revenue", ascending=False)
@@ -744,46 +680,6 @@ def product_intelligence():
         "success": True,
         "products": product_df.to_dict(orient="records")
     })
-@app.route("/reset-password", methods=["POST"])
-def reset_password():
-    data = request.get_json()
-
-    email = data.get("email")
-    otp = data.get("otp")
-    new_password = data.get("new_password")
-
-    if email != session.get("reset_email"):
-        return jsonify({"success": False, "message": "Invalid request"})
-
-    if otp != session.get("reset_otp"):
-        return jsonify({"success": False, "message": "Invalid OTP"})
-
-    expiry = session.get("otp_expiry")
-    if not expiry:
-        return jsonify({"success": False, "message": "OTP expired"})
-
-    if datetime.datetime.now() > datetime.datetime.fromisoformat(expiry):
-        return jsonify({"success": False, "message": "OTP expired"})
-
-    if len(new_password) < 8:
-        return jsonify({"success": False, "message": "Password must be at least 8 characters"})
-
-    new_hash = generate_password_hash(new_password)
-
-    conn = get_db()
-    cur = conn.cursor()
-    cur.execute(
-        "UPDATE users SET password = %s WHERE email = %s",
-        (new_hash, email)
-    )
-    conn.commit()
-    conn.close()
-
-    session.pop("reset_email", None)
-    session.pop("reset_otp", None)
-    session.pop("otp_expiry", None)
-
-    return jsonify({"success": True})
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

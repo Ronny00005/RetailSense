@@ -1,11 +1,9 @@
 setInterval(() => {
     fetch("/api/inventory").catch(() => {});
-},40 * 1000); 
-
-
-
+}, 40 * 1000);
 function showSection(sectionId) {
-    
+
+   
     document.querySelectorAll(".content-section").forEach(sec => {
         sec.classList.remove("active");
     });
@@ -13,33 +11,33 @@ function showSection(sectionId) {
    
     document.getElementById(sectionId).classList.add("active");
 
-    
+   
     document.querySelectorAll(".nav-item").forEach(btn => {
         btn.classList.remove("active");
     });
 
-    
+   
     document
         .querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`)
         .classList.add("active");
 
-    
-    
-     if (sectionId === "inventory") {
+   
+    if (sectionId === "inventory") {
         setTimeout(() => {
             loadInventory();
         }, 200);
     }
 
+    
+    if (sectionId === "category") {
+        loadCategoryCharts();
+        loadCategoryDropdown();
+    }
 
-if (sectionId === "category") {
-    loadCategoryCharts();
-    loadCategoryDropdown();
-}
-if (sectionId === "product-intelligence") {
-    loadProductIntelligence();
-}
-
+   
+    if (sectionId === "product-intelligence") {
+        loadProductIntelligence();
+    }
 }
 
 function uploadCSV(event) {
@@ -64,9 +62,6 @@ function uploadCSV(event) {
         alert("Upload error");
     });
 }
-
-
-
 function changePassword(event) {
     event.preventDefault();
 
@@ -94,7 +89,7 @@ function changePassword(event) {
         if (data.success) {
             alert("Password changed successfully");
 
-            
+           
             document.getElementById("currentPassword").value = "";
             document.getElementById("newPassword").value = "";
             document.getElementById("confirmPassword").value = "";
@@ -106,20 +101,14 @@ function changePassword(event) {
         alert("Server error. Try again later.");
     });
 }
-
-
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
         window.location.href = '/logout';
     }
 }
-
-
 function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('active');
 }
-
-
 if (window.innerWidth <= 1024) {
     window.addEventListener('DOMContentLoaded', () => {
         const header = document.querySelector('.content-header');
@@ -131,6 +120,12 @@ if (window.innerWidth <= 1024) {
         header.insertBefore(menuBtn, header.firstChild);
     });
 }
+
+window.addEventListener('resize', () => {
+    if (window.innerWidth > 1024) {
+        document.querySelector('.sidebar').classList.remove('active');
+    }
+});
 function generateReport(event) {
     event.preventDefault();
 
@@ -156,6 +151,7 @@ function generateReport(event) {
         document.getElementById("reportTopProduct").innerText = data.top_product;
         document.getElementById("reportWorstProduct").innerText = data.worst_product;
 
+        
         document.getElementById("reportResults").classList.remove("hidden");
     });
 }
@@ -179,7 +175,6 @@ function downloadExcel() {
 }
 let categoryBarChart = null;
 let categoryPieChart = null;
-
 function loadCategoryCharts() {
     fetch("/api/category-charts")
         .then(res => res.json())
@@ -193,7 +188,6 @@ function loadCategoryCharts() {
             renderCategoryPieChart(labels, values);
         });
 }
-
 function renderCategoryBarChart(labels, values) {
     const ctx = document.getElementById("categoryBarChart").getContext("2d");
 
@@ -224,7 +218,6 @@ function renderCategoryBarChart(labels, values) {
         }
     });
 }
-
 function renderCategoryPieChart(labels, values) {
     const ctx = document.getElementById("categoryPieChart").getContext("2d");
 
@@ -250,12 +243,6 @@ function renderCategoryPieChart(labels, values) {
         }
     });
 }
-
-window.addEventListener('resize', () => {
-    if (window.innerWidth > 1024) {
-        document.querySelector('.sidebar').classList.remove('active');
-    }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
     fetch("/api/monthly-sales")
@@ -287,13 +274,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-    
+           
             setTimeout(() => chart.resize(), 100);
         });
 });
-
 let inventoryChart = null;
-
 function loadInventory() {
     fetch("/api/inventory")
         .then(res => res.json())
@@ -312,7 +297,6 @@ function loadInventory() {
             renderInventoryChart(data);
         });
 }
-
 function renderInventoryChart(data) {
     const ctx = document.getElementById("inventoryChart");
 
@@ -337,6 +321,7 @@ function renderInventoryChart(data) {
         }
     });
 }
+
 function loadCategoryDropdown() {
     fetch("/api/categories")
         .then(res => res.json())
@@ -354,6 +339,7 @@ function loadCategoryDropdown() {
             });
         });
 }
+
 function fetchCategorySummary() {
     const category = document.getElementById("categorySelect").value;
     if (!category) return;
@@ -376,9 +362,14 @@ function fetchCategorySummary() {
         document.getElementById("catBest").innerText = data.best_item;
         document.getElementById("catWorst").innerText = data.worst_item;
 
+        // Reveal the summary grid after data has been populated
         document.getElementById("categorySummary").style.display = "grid";
     });
 }
+let abcChart = null;
+let profitVolumeChart = null;
+
+
 function loadProductIntelligence() {
     fetch("/api/product-intelligence")
         .then(res => res.json())
@@ -391,6 +382,8 @@ function loadProductIntelligence() {
             renderProductTable(data.products);
         });
 }
+
+
 function updateKPIs(products) {
     const counts = {};
 
@@ -402,6 +395,8 @@ function updateKPIs(products) {
     document.getElementById("kpiB").textContent = counts["B"] || 0;
     document.getElementById("kpiC").textContent = counts["C"] || 0;
 }
+
+
 function renderABCChart(products) {
     const classCounts = {};
 
@@ -409,7 +404,10 @@ function renderABCChart(products) {
         classCounts[p.abc_class] = (classCounts[p.abc_class] || 0) + 1;
     });
 
-    new Chart(document.getElementById("abcChart"), {
+    
+    if (abcChart) abcChart.destroy();
+
+    abcChart = new Chart(document.getElementById("abcChart"), {
         type: "bar",
         data: {
             labels: Object.keys(classCounts),
@@ -419,6 +417,7 @@ function renderABCChart(products) {
         }
     });
 }
+
 function renderProfitVolumeChart(products) {
     const grouped = {};
 
@@ -427,11 +426,14 @@ function renderProfitVolumeChart(products) {
         grouped[p.quadrant].push({
             x: p.quantity,
             y: p.profit,
-            label: p.item_name   
+            label: p.item_name
         });
     });
 
-    new Chart(document.getElementById("profitVolumeChart"), {
+    
+    if (profitVolumeChart) profitVolumeChart.destroy();
+
+    profitVolumeChart = new Chart(document.getElementById("profitVolumeChart"), {
         type: "scatter",
         data: {
             datasets: Object.keys(grouped).map(q => ({
@@ -462,11 +464,13 @@ function renderProfitVolumeChart(products) {
     });
 }
 
+
 function renderProductTable(products) {
     const tbody = document.getElementById("productTable");
     tbody.innerHTML = "";
 
     products.forEach(p => {
+        
         const badgeClass =
             p.abc_class === "A" ? "badge-a" :
             p.abc_class === "B" ? "badge-b" : "badge-c";

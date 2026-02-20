@@ -215,7 +215,7 @@
                 title.textContent = 'Create Account';
                 subtitle.textContent = 'Join us and start analyzing your sales data';
             }, 400);
-        }
+}
         function showForgot(){
     document.getElementById("loginForm").classList.add("hidden");
     document.getElementById("forgotForm").classList.remove("hidden");
@@ -263,7 +263,7 @@ async function resetPassword(){
             const signupForm = document.getElementById('signupForm');
             const title = document.getElementById('formTitle');
             const subtitle = document.querySelector('.form-subtitle');
-
+            forgotForm.classList.add("hidden");
             signupForm.style.animation = 'slideOut 0.4s ease forwards';
             
             setTimeout(() => {
@@ -331,7 +331,6 @@ async function resetPassword(){
         return;
     }
 
-    // ✅ IMPORTANT FIX
     if (data.csv_uploaded) {
         window.location.href = "/dashboard";
     } else {
