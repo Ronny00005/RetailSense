@@ -12,13 +12,20 @@ import pandas as pd
 from flask_mail import Mail, Message
 import random
 import datetime
+
 app = Flask(__name__, static_folder="static")  
 mail = Mail(app)
+
 app.secret_key = "super_secret_key"
+
 UPLOAD_FOLDER = "uploads"
+
 ALLOWED_EXTENSIONS = {"csv"}
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
 @app.route("/favicon.ico")
 def favicon():
     return "", 204
@@ -513,8 +520,8 @@ def inventory():
     if total_quantity <= 0:
         return jsonify({
             "success": True,
-            "forecast": forecast_demand,
-            "current_stock": current_stock,
+            "forecast": int(forecast_demand),
+            "current_stock": int(current_stock),
             "action": "No Sales Data"
         })
 
