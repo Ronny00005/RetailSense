@@ -539,9 +539,9 @@ def inventory():
 
     return jsonify({
         "success": True,
-        "forecast": forecast_demand,
-        "current_stock": current_stock,
-        "action": action
+        "forecast": int(forecast_demand),
+        "current_stock": int(current_stock),
+        "action": str(action)
     })
 
 
