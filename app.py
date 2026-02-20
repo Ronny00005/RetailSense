@@ -489,6 +489,7 @@ def inventory():
         return jsonify({"success": False})
 
     df = process_sales_data(df)
+    df["stock_left"] = pd.to_numeric(df["stock_left"], errors="coerce").fillna(0)
 
     if "stock_left" not in df.columns or "quantity" not in df.columns:
         return jsonify({
